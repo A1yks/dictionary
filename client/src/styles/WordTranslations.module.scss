@@ -1,0 +1,18 @@
+.container {
+	.sourceWord {
+		font-weight: bold;
+		text-transform: capitalize;
+	}
+
+	.partOfSpeech {
+		font-weight: bold;
+	}
+
+	.wordTranslations:first-letter {
+		text-transform: capitalize;
+	}
+
+	.translationsWrapper {
+		margin-top: 0.5rem;
+	}
+}

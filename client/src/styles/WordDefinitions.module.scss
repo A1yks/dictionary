@@ -1,0 +1,57 @@
+@import './variables.scss';
+
+.container {
+	.sourceWord {
+		text-transform: capitalize;
+		font-weight: bold;
+	}
+
+	.partOfSpeech {
+		font-weight: bold;
+	}
+
+	.definitionsWrapper {
+		margin-top: 0.5rem;
+
+		p:first-letter {
+			text-transform: capitalize;
+		}
+
+		.example {
+			font-weight: bold;
+		}
+
+		.definitionsContainer {
+			&:last-child {
+				.definitionContent {
+					&:last-child {
+						margin-bottom: 0;
+						padding-bottom: 0;
+
+						&::after {
+							content: none;
+						}
+					}
+				}
+			}
+
+			.definitionContent {
+				margin-bottom: 0.5rem;
+				padding-bottom: 0.5rem;
+				position: relative;
+
+				&::after {
+					content: '';
+					position: absolute;
+					display: block;
+					height: 1px;
+					width: calc(100% + 2rem);
+					bottom: 0;
+					left: 50%;
+					transform: translateX(-50%);
+					background: $gray;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,22 @@
+.learnWords {
+	.buttons {
+		position: relative;
+
+		button {
+			width: 8rem;
+		}
+
+		.skipBtn {
+			position: absolute;
+			right: 0;
+		}
+	}
+
+	.sourceWord {
+		font-weight: bold;
+	}
+
+	p:first-letter {
+		text-transform: capitalize;
+	}
+}

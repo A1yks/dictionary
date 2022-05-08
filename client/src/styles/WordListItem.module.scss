@@ -1,0 +1,41 @@
+@import './variables.scss';
+
+.item {
+	display: flex;
+	padding: 0 1rem;
+	justify-content: space-between;
+	align-items: center;
+
+	&:not(:last-child) {
+		border-bottom: 1px solid $gray;
+	}
+
+	.firstTranslations {
+		line-height: 0;
+		padding: 1rem 0;
+
+		.sourceWord {
+			display: inline-block;
+			font-weight: bold;
+
+			&:first-letter {
+				text-transform: capitalize;
+			}
+		}
+	}
+
+	.buttons {
+		button {
+			margin-left: 0.2rem;
+		}
+	}
+}
+
+.loader {
+	padding: 1rem 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

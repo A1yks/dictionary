@@ -1,0 +1,15 @@
+.box {
+	margin-top: 1rem;
+	padding: 0 24px;
+
+	.card {
+		width: 13rem;
+		height: 17rem;
+
+		&.addLanguage {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+	}
+}

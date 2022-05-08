@@ -1,0 +1,34 @@
+.cardActionsWrapper {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	.iconsWrapper {
+		display: flex;
+		margin-top: 0.5rem;
+	}
+
+	button {
+		width: 100%;
+
+		&.icon {
+			width: auto;
+
+			&:not(:first-child) {
+				margin-left: 0.5rem;
+			}
+		}
+	}
+
+	.btn {
+		margin-top: 0.5rem;
+		display: flex;
+		text-decoration: none;
+		width: 85%;
+	}
+}
+
+.wordsInfo {
+	margin-top: 0.5rem;
+}

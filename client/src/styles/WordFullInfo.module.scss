@@ -1,0 +1,28 @@
+@import './variables.scss';
+
+.fullInfo {
+	overflow: hidden;
+
+	.gridItem {
+		padding: 1rem;
+	}
+
+	.wordTranslations {
+		border-right: 1px solid $gray;
+	}
+
+	.wordListItem {
+		border: none;
+		border-bottom: 1px solid $gray;
+		padding: 0 1rem;
+		border-radius: 0;
+
+		& > div:first-child {
+			padding: 1rem 0;
+		}
+
+		button {
+			margin-left: 1rem;
+		}
+	}
+}

@@ -1,0 +1,8 @@
+.wordList {
+	overflow: hidden;
+
+	& > div {
+		border: none;
+		border-radius: 0;
+	}
+}

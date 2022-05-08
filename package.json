@@ -1,0 +1,27 @@
+{
+    "name": "dictionary-app-server",
+    "version": "1.0.0",
+    "description": "dictionary app server",
+    "main": "src/server.ts",
+    "scripts": {
+        "server": "nodemon --watch . --ext \"ts,json\" --exec \"ts-node --files src/server.ts\"",
+        "client": "npm start --prefix client",
+        "dev": "concurrently \"npm run server\" \"npm run client\"",
+        "start": "cross-env NODE_ENV=production node build/server.js",
+        "build": "npm run build --prefix client && tsc"
+    },
+    "author": "Alyks",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "^0.24.0",
+        "cors": "^2.8.5",
+        "dotenv": "^11.0.0",
+        "express": "^4.17.2",
+        "mongoose": "^6.1.6"
+    },
+    "devDependencies": {
+        "@types/cors": "^2.8.12",
+        "@types/express": "^4.17.13",
+        "@types/node": "^17.0.5"
+    }
+}
