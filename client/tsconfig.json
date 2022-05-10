@@ -15,7 +15,8 @@
         "isolatedModules": true,
         "noEmit": true,
         "jsx": "react-jsx",
-        "checkJs": true
+        "checkJs": true,
+        "baseUrl": "./src"
     },
     "include": ["src", "declarations.d.ts"],
     "exclude": ["node_modules"]

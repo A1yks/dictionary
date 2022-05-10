@@ -76,7 +76,7 @@ router.post('/delete', async (req: CustomRequest<{ langId: string; words: string
             }
         }
 
-        await language.updateOne({ $pull: { words: { source: { $in: words } } } });
+        await language.updateOne({ $pull: { words: { source: { $in: words } }, wordsToLearn: { source: { $in: words } } } });
         res.json({ success: true });
     } catch (err) {
         if (err instanceof LanguageNotFoundError) {
