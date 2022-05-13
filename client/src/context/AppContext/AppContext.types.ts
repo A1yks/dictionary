@@ -7,7 +7,7 @@ export interface IAppContext {
     editLanguage: (id: string, data: Language) => Promise<void>;
     chooseLanguage: (language: Language | string) => void;
     addWord: (langId: string, word: Word) => Promise<void>;
-    deleteWords: (langId: string, word: string[]) => Promise<void>;
+    deleteWords: (langId: string, word: Word[]) => Promise<void>;
     getLanguage: (id: string) => Language;
     learnWord: (langId: string, word: Word) => void;
     chosenLanguage: Language | null;

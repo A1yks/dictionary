@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { IDefinition, IPartsOfSpeech, IPhonetic, IWord } from '../models/Language';
+import { IDefinition, IPartsOfSpeech, IPhonetic, IWord } from '../models/Word';
 
 // Yandex english-russian dictionary
 
@@ -148,7 +148,7 @@ function getFirstTranslations(translations: IPartsOfSpeech): string[] {
     return result;
 }
 
-async function translate(text: string): Promise<IWord | null> {
+async function translate(text: string): Promise<Partial<IWord> | null> {
     const [rawYandexResult, rawEnglishDictResult] = await getRawTranslationResults(text);
 
     if (rawYandexResult === null) return null;

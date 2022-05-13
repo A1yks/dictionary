@@ -45,7 +45,7 @@ const WordsListItem: FC<WordListItemProps> = (props) => {
 
     function openDeleteWordDialogHandler() {
         if (props.wordInfo !== null) {
-            setWordToDelete(props.wordInfo.source);
+            setWordToDelete(props.wordInfo);
             openDeleteWordDialog();
         }
     }

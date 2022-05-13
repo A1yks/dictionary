@@ -5,7 +5,7 @@ import { CustomRequest, CustomResponse } from '../../types/request';
 const router = Router();
 
 router.get('/get', async (req, res: CustomResponse) => {
-    const languages = await Language.find({});
+    const languages = await Language.find({}).populate('words wordsToLearn');
     res.json({ success: true, data: languages });
 });
 
@@ -28,16 +28,20 @@ router.post('/add', async (req: CustomRequest<{ languageName: string }>, res: Cu
     });
 });
 
-router.post('/delete', (req: CustomRequest<{ id: string }>, res: CustomResponse) => {
+router.post('/delete', async (req: CustomRequest<{ id: string }>, res: CustomResponse) => {
     const { id } = req.body;
 
-    Language.findByIdAndDelete(id, null, (err, doc) => {
-        if (err || doc === null) {
-            return res.status(500).json({ success: false, message: 'Произошла ошибка при попытке удалить язык' });
+    try {
+        const result = await Language.findByIdAndDelete(id);
+
+        if (!result) {
+            res.status(404).json({ success: false, message: 'Языка с переданным id не существует' });
         }
 
-        res.json({ success: true });
-    });
+        res.status(200).json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Произошла ошибка при попытке удалить язык' });
+    }
 });
 
 router.post('/edit', (req: CustomRequest<{ id: string; data: ILanguage }>, res: CustomResponse) => {

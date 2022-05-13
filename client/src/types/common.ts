@@ -25,6 +25,7 @@ export interface Word {
     phonetic?: Phonetic;
     firstTranslations: string[];
     hasDefinitions: boolean;
+    repeatAt: number;
 }
 
 export interface Language {

@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
 import { useEffect, useContext } from 'react';
 import { createContext } from 'react';
 import LanguageEditError from 'errors/LanguageEditError';
@@ -125,17 +125,17 @@ export const AppContextProvider: FC = (props) => {
         }
     }, []);
 
-    const deleteWords = useCallback(async (langId: string, words: string[]) => {
-        const response = await request.post('/words/delete', { langId, words });
+    const deleteWords = useCallback(async (langId: string, words: Word[]) => {
+        const response = await request.post<{ words: Word[]; wordsToLearn: Word[] }>('/words/delete', { langId, words });
 
         if (response.success) {
             setLanguages((state) =>
                 state.map((lang) => {
                     if (lang.id !== langId) return lang;
 
-                    const filteredWords = lang.words.filter(({ source }) => !words.includes(source));
+                    // const filteredWords = lang.words.filter(({ source }) => !words.includes(source));
 
-                    return { ...lang, words: filteredWords, wordsToLearn: [...filteredWords] };
+                    return { ...lang, words: response.data.words, wordsToLearn: response.data.wordsToLearn };
                 })
             );
         } else {
@@ -153,23 +153,34 @@ export const AppContextProvider: FC = (props) => {
         );
     }, []);
 
-    return (
-        <AppContext.Provider
-            value={{
-                languages,
-                chosenLanguage,
-                languagesLoaded,
-                addLanguage,
-                deleteLanguage,
-                editLanguage,
-                chooseLanguage,
-                addWord,
-                getLanguage,
-                deleteWords,
-                learnWord,
-            }}
-        >
-            {props.children}
-        </AppContext.Provider>
+    const contextValue = useMemo(
+        () => ({
+            languages,
+            chosenLanguage,
+            languagesLoaded,
+            addLanguage,
+            deleteLanguage,
+            editLanguage,
+            chooseLanguage,
+            addWord,
+            getLanguage,
+            deleteWords,
+            learnWord,
+        }),
+        [
+            languages,
+            chosenLanguage,
+            languagesLoaded,
+            addLanguage,
+            deleteLanguage,
+            editLanguage,
+            chooseLanguage,
+            addWord,
+            getLanguage,
+            deleteWords,
+            learnWord,
+        ]
     );
+
+    return <AppContext.Provider value={contextValue}>{props.children}</AppContext.Provider>;
 };

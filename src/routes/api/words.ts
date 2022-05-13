@@ -2,7 +2,8 @@ import { Router } from 'express';
 import LanguageNotFoundError from '../../errors/api/languages/LanguageNotFoundError';
 import WordAlreadyAddedError from '../../errors/api/words/WordAlreadyAddedError';
 import WordNotAddedError from '../../errors/api/words/WordNotAddedError';
-import Language, { IWord } from '../../models/Language';
+import Language from '../../models/Language';
+import Word, { IWord } from '../../models/Word';
 import { CustomRequest, CustomResponse } from '../../types/request';
 import translate from '../../utils/translate';
 
@@ -33,18 +34,18 @@ router.post('/add', async (req: CustomRequest<{ langId: string; word: IWord }>, 
             throw new LanguageNotFoundError();
         }
 
-        word.source = word.source.toLowerCase();
-        const langHasWord = !!language.words.find(({ source }) => word.source === source);
+        const currWord = await Word.findOne({ language: langId, source: word.source.toLowerCase() });
 
-        if (langHasWord) {
+        if (currWord !== null) {
             throw new WordAlreadyAddedError();
         }
 
-        language.words.push(word);
-        language.wordsToLearn.push(word);
-        await language.save();
+        const newWord = new Word(word);
 
-        return res.json({ success: true });
+        newWord.language = language._id;
+        language.words.push(newWord._id);
+        await Promise.all([language.save(), newWord.save()]);
+        res.json({ success: true });
     } catch (err) {
         if (err instanceof WordAlreadyAddedError) {
             return res.status(403).json({ success: false, message: 'Такое слово уже добавлено' });
@@ -54,31 +55,41 @@ router.post('/add', async (req: CustomRequest<{ langId: string; word: IWord }>, 
             return res.status(404).json({ success: false, message: 'Не удалось найти словарь, в который необходимо добавить слово' });
         }
 
-        return res.status(505).json({ success: false, message: 'Произошла ошибка при добавлении нового слова' });
+        return res.status(500).json({ success: false, message: 'Произошла ошибка при добавлении нового слова' });
     }
 });
 
-router.post('/delete', async (req: CustomRequest<{ langId: string; words: string[] }>, res: CustomResponse) => {
+router.post('/delete', async (req: CustomRequest<{ langId: string; words: IWord[] }>, res: CustomResponse) => {
     const { langId, words } = req.body;
 
     try {
-        const language = await Language.findById(langId);
+        const wordIds = words.map((word) => word.id);
+
+        // for (const word of words) {
+        //     const langHasWord = !!language.words.find(({ source }) => word === source);
+
+        //     if (!langHasWord) {
+        //         throw new WordNotAddedError();
+        //     }
+        // }
+
+        // await language.updateOne({ $pull: { words: { source: { $in: words } }, wordsToLearn: { source: { $in: words } } } });
+
+        const result = await Word.deleteMany({ _id: { $in: wordIds } });
+
+        if (!result) {
+            return res.status(404).json({ success: false, message: 'Удаляемое слово не было найдено' });
+        }
+
+        const language = await Language.findById(langId).populate('words wordsToLearn');
 
         if (language === null) {
             throw new LanguageNotFoundError();
         }
 
-        for (const word of words) {
-            const langHasWord = !!language.words.find(({ source }) => word === source);
-
-            if (!langHasWord) {
-                throw new WordNotAddedError();
-            }
-        }
-
-        await language.updateOne({ $pull: { words: { source: { $in: words } }, wordsToLearn: { source: { $in: words } } } });
-        res.json({ success: true });
+        res.status(200).json({ success: true, data: { words: language.words, wordsToLearn: language.wordsToLearn } });
     } catch (err) {
+        console.error(err);
         if (err instanceof LanguageNotFoundError) {
             return res.status(404).json({ success: false, message: 'Не удалось найти словарь, из которого необходимо удалить слово' });
         }
