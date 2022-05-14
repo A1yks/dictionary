@@ -2,8 +2,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import languagesRoutes from './routes/api/languages';
-import wordsRoutes from './routes/api/words';
+import languagesRoutes from './routes/languages';
+import wordsRoutes from './routes/words';
 
 dotenv.config();
 

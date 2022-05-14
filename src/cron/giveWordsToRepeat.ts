@@ -1,5 +1,4 @@
 import { CronJob } from 'cron';
-import Language from '../models/Language';
 
 async function giveWordsToRepeat() {
     try {

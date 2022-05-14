@@ -1,4 +1,4 @@
-import { Document, HydratedDocument, Model, model, ObjectId, Query, Schema, SchemaDefinitionProperty } from 'mongoose';
+import { Model, model, ObjectId, Schema, SchemaDefinitionProperty } from 'mongoose';
 import getNextDayUnix from '../utils/getNextDayUnix';
 import schemaQueryHandler from '../utils/schemaQueryHandler';
 import transformObject from '../utils/transformObject';

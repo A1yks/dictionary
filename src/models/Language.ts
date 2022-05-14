@@ -1,4 +1,4 @@
-import { HydratedDocument, Model, model, Query, Schema } from 'mongoose';
+import { Model, model, Schema } from 'mongoose';
 import schemaQueryHandler from '../utils/schemaQueryHandler';
 import transformObject from '../utils/transformObject';
 import Word, { IWord } from './Word';
@@ -12,10 +12,10 @@ export interface ILanguage {
 
 const languageSchema = new Schema<ILanguage, Model<ILanguage>>(
     {
-        name: String,
-        wordsLearned: Number,
-        words: [{ type: Schema.Types.ObjectId, ref: 'Word' }],
-        wordsToLearn: [{ type: Schema.Types.ObjectId, ref: 'Word' }],
+        name: { type: String, required: true },
+        wordsLearned: { type: Number, default: 0 },
+        words: { type: [{ type: Schema.Types.ObjectId, ref: 'Word' }], default: [] },
+        wordsToLearn: { type: [{ type: Schema.Types.ObjectId, ref: 'Word' }], default: [] },
     },
     {
         collection: 'languages',

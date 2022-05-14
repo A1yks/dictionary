@@ -24,7 +24,7 @@ interface WordInfo {
 }
 
 interface YandexTranslationResult {
-    head: {};
+    head: Record<string, unknown>;
     def: WordInfo[];
 }
 
@@ -131,7 +131,7 @@ function getPartsOfSpeech<T extends string | IDefinition = string>(array: Array<
 function getFirstTranslations(translations: IPartsOfSpeech): string[] {
     const maxTranslations = 3;
     let foundTranslations = 0;
-    let result = [];
+    const result = [];
     const values: string[][] = Object.values(translations);
 
     for (const translations of values) {
