@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import { Language } from 'types/common';
 import { useAppContext } from 'context/AppContext';
 import { useDictionariesContext } from 'context/DictionariesContext';
 import LanguageEditError from 'errors/LanguageEditError';
@@ -22,7 +21,7 @@ const EditLanguageName: FC = () => {
     async function updateLanguage() {
         try {
             setLoading(true);
-            await editLanguage(workingLanguageId, { name: languageName } as Language);
+            await editLanguage(workingLanguageId, languageName);
         } catch (err) {
             if (err instanceof LanguageEditError) {
                 console.error(err);

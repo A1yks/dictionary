@@ -2,13 +2,13 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { FC, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Word } from 'types/common';
-import request from 'utils/request';
 import { LoadingButton } from '@mui/lab';
 import { useAppContext } from 'context/AppContext';
 import WordAdditionError from 'errors/WordAdditionError';
 import WordsListItem from 'components/pages/Words/WordsList/WordsListItem';
 import { DialogProps } from '../Dialog.types';
 import React from 'react';
+import API from 'utils/api';
 
 const AddWordDialog: FC<DialogProps> = (props) => {
     const context = useAppContext();
@@ -48,14 +48,12 @@ const AddWordDialog: FC<DialogProps> = (props) => {
     async function searchWord(word: string) {
         try {
             setWordLoading(true);
-            const result = await request.get<Word>(`/words/search/${encodeURIComponent(word.trim())}`);
 
-            if (result.success) {
-                setWordInfo(result.data);
-            } else {
-                setWordInfo(null);
-            }
+            const result = await API<Word>(`/words/search/${encodeURIComponent(word.trim())}`);
+
+            setWordInfo(result.data);
         } catch (err) {
+            setWordInfo(null);
             console.error(err);
         } finally {
             setWordLoading(false);

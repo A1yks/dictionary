@@ -16,35 +16,43 @@ function getPartsOfSpeechSchema(schema: Joi.Schema) {
     });
 }
 
-const phoneticSchema = Joi.object<IPhonetic>().keys({
-    text: Joi.string(),
-    audio: Joi.string(),
-});
+const phoneticSchema = Joi.object<IPhonetic>()
+    .keys({
+        text: Joi.string().allow(''),
+        audio: Joi.string().allow(''),
+    })
+    .unknown();
 
 const definitionSchema = Joi.object<IDefinition>().keys({
     definition: Joi.string(),
     example: Joi.string(),
 });
 
-const wordSchema = Joi.object<IWord>().keys({
-    id: Joi.string().required().custom(objectIdValidation),
+const clientWordSchema = Joi.object<Partial<IWord>>().keys({
     source: Joi.string().required(),
     phonetic: phoneticSchema,
     translations: getPartsOfSpeechSchema(Joi.string()),
     definitions: getPartsOfSpeechSchema(definitionSchema),
     firstTranslations: Joi.array().items(Joi.string()),
     hasDefinitions: Joi.boolean(),
+});
+
+const wordSchema = clientWordSchema.keys({
+    id: Joi.string().required().custom(objectIdValidation),
     repeatAt: Joi.number().required(),
     language: langId,
 });
 
-export const searchWordSchema = Joi.object<SearchWordParams>().keys({
-    word: Joi.string().required(),
-});
+export const searchWordSchema = Joi.object<SearchWordParams>()
+    .keys({
+        word: Joi.string().required(),
+    })
+    .allow('')
+    .options({ allowUnknown: true });
 
 export const addWordSchema = Joi.object<AddWordReq>().keys({
     langId,
-    word: wordSchema.required(),
+    word: clientWordSchema.required(),
 });
 
 export const deleteWordsSchema = Joi.object<DeleteWordsReq>().keys({

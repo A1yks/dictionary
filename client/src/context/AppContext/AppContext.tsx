@@ -5,11 +5,11 @@ import LanguageEditError from 'errors/LanguageEditError';
 import LanguageNotAddedError from 'errors/LanguageNotAddedError';
 import LanguageNotDeletedError from 'errors/LanguageNotDeletedError';
 import NoSuchLanguageError from 'errors/NoSuchLanguageError';
-import WordAdditionError from 'errors/WordAdditionError';
 import WordDeletionError from 'errors/WordDeletionError';
 import { Language, Word } from 'types/common';
-import request from 'utils/request';
 import { IAppContext } from './AppContext.types';
+import API from 'utils/api';
+import WordAdditionError from 'errors/WordAdditionError';
 
 const AppContext = createContext<IAppContext>({} as IAppContext);
 
@@ -23,14 +23,10 @@ export const AppContextProvider: FC = (props) => {
     useEffect(() => {
         async function fetchLanguages() {
             try {
-                const result = await request.get<Language[]>('/languages/get');
+                const result = await API<Language[]>('/languages');
 
-                if (result.success) {
-                    setLanguages(result.data);
-                    setLanguagesLoaded(true);
-                } else {
-                    throw new Error('Languages was not loaded');
-                }
+                setLanguages(result.data);
+                setLanguagesLoaded(true);
             } catch (err) {
                 console.error(err);
             }
@@ -42,38 +38,43 @@ export const AppContextProvider: FC = (props) => {
     }, [languagesLoaded]);
 
     const addLanguage = useCallback(async (languageName: string) => {
-        const result = await request.post<Language>('/languages/add', { languageName });
+        try {
+            const response = await API<Language>('/languages/add', { method: 'POST', data: { languageName } });
 
-        if (result.success) {
-            setLanguages((state) => [...state, result.data]);
-        } else {
-            throw new LanguageNotAddedError();
+            setLanguages((state) => [...state, response.data]);
+        } catch (err) {
+            if (typeof err === 'string') {
+                throw new LanguageNotAddedError(err);
+            }
         }
     }, []);
 
-    const deleteLanguage = useCallback(async (id: string) => {
-        const result = await request.post('/languages/delete', { id });
-
-        if (result.success) {
-            setLanguages((state) => state.filter((language) => language.id !== id));
-        } else {
-            throw new LanguageNotDeletedError();
+    const deleteLanguage = useCallback(async (langId: string) => {
+        try {
+            await API('/languages/delete', { method: 'DELETE', data: { langId } });
+            setLanguages((state) => state.filter((lang) => lang.id !== langId));
+        } catch (err) {
+            if (typeof err === 'string') {
+                throw new LanguageNotDeletedError(err);
+            }
         }
     }, []);
 
-    const editLanguage = useCallback(async (id: string, data: Language) => {
-        const result = await request.post('/languages/edit', { id, data });
+    const editLanguage = useCallback(async (langId: string, languageName: string) => {
+        try {
+            const response = await API<Language>('/languages/edit', { method: 'PATCH', data: { langId, languageName } });
 
-        if (result.success) {
             setLanguages((state) =>
                 state.map((lang) => {
-                    if (lang.id !== id) return lang;
+                    if (lang.id !== langId) return lang;
 
-                    return { ...lang, ...data };
+                    return { ...lang, ...response.data };
                 })
             );
-        } else {
-            throw new LanguageEditError();
+        } catch (err) {
+            if (typeof err === 'string') {
+                throw new LanguageEditError(err);
+            }
         }
     }, []);
 
@@ -110,36 +111,38 @@ export const AppContextProvider: FC = (props) => {
     );
 
     const addWord = useCallback(async (langId: string, word: Word) => {
-        const response = await request.post('/words/add', { langId, word });
+        try {
+            const response = await API<Word>('/words/add', { method: 'POST', data: { langId, word } });
 
-        if (response.success) {
             setLanguages((state) =>
                 state.map((lang) => {
                     if (lang.id !== langId) return lang;
 
-                    return { ...lang, words: [...lang.words, word], wordsToLearn: [...lang.words, word] };
+                    return { ...lang, words: [...lang.words, response.data] };
                 })
             );
-        } else {
-            throw new WordAdditionError();
+        } catch (err) {
+            if (typeof err === 'string') {
+                throw new WordAdditionError(err);
+            }
         }
     }, []);
 
     const deleteWords = useCallback(async (langId: string, words: Word[]) => {
-        const response = await request.post<{ words: Word[]; wordsToLearn: Word[] }>('/words/delete', { langId, words });
+        try {
+            const response = await API<{ words: Word[]; wordsToLearn: Word[] }>('/words/delete', { method: 'DELETE', data: { langId, words } });
 
-        if (response.success) {
             setLanguages((state) =>
                 state.map((lang) => {
                     if (lang.id !== langId) return lang;
 
-                    // const filteredWords = lang.words.filter(({ source }) => !words.includes(source));
-
                     return { ...lang, words: response.data.words, wordsToLearn: response.data.wordsToLearn };
                 })
             );
-        } else {
-            throw new WordDeletionError();
+        } catch (err) {
+            if (typeof err === 'string') {
+                throw new WordDeletionError();
+            }
         }
     }, []);
 

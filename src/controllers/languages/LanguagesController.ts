@@ -33,6 +33,7 @@ class LanguagesController {
 
             res.status(204).send();
         } catch (err) {
+            console.log(err);
             res.status(500).json({ error: 'Произошла ошибка при удалении языка' });
         }
     }

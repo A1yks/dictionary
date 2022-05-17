@@ -3,8 +3,8 @@ import { isServiceError } from '../../types/guards';
 import { AddWordReq, DeleteWordsReq, SearchWordParams } from './types';
 
 class WordsController {
-    async searchWord(req: Server.Request<SearchWordParams>, res: Server.Response) {
-        const { word } = req.body;
+    async searchWord(req: Server.Request<unknown, SearchWordParams>, res: Server.Response) {
+        const { word } = req.params;
 
         try {
             const result = await WordsService.searchWord(word);

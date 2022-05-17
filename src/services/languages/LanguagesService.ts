@@ -11,6 +11,7 @@ class LanguagesService {
         const language = new Language({ name: languageName });
 
         await language.save();
+
         return language;
     }
 
@@ -23,7 +24,7 @@ class LanguagesService {
     }
 
     async editLanguageName(langId: string, languageName: string): Promise<ILanguage | Service.Error> {
-        const result = await Language.findByIdAndUpdate(langId, { languageName }, { new: true }).lean();
+        const result = await Language.findByIdAndUpdate(langId, { name: languageName }, { new: true }).lean();
 
         if (!result) {
             return { status: 404, error: 'Языка с переданным id не существует' };
