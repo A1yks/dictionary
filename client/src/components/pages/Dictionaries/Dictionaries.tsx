@@ -1,22 +1,20 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Grid, Paper, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import styles from './Dictionaries.module.scss';
-import AddDictionaryForm from 'components/dialogs/AddDictionaryForm';
-import { useAppContext } from 'context/AppContext';
+import AddDictionaryDialog from 'components/dialogs/AddDictionaryDialog';
 import DictionaryCard from 'components/pages/Dictionaries/DictionaryCard';
 import c from 'classnames';
-import DeleteConfirmation from 'components/dialogs/DeleteConfirmation';
-import EditLanguageName from 'components/dialogs/EditLanguageName';
+import DeleteLanguageDialog from 'components/dialogs/DeleteLanguageDialog';
+import EditLanguageNameDialog from 'components/dialogs/EditLanguageNameDialog';
 import LearnWordsDialog from 'components/dialogs/LearnWordsDialog';
+import { useLanguagesStore } from 'context/StoreContext';
+import { observer } from 'mobx-react-lite';
+import { openDialogHandler } from 'components/UI/CustomDialog/controllers';
+import { DialogNames } from 'components/dialogs/Dialog.types';
 
 const Dictionaries: FC = () => {
-    const { languages } = useAppContext();
-    const [isAddDialogOpened, setAddDialogOpened] = useState<boolean>(false);
-
-    const closeHandler = () => setAddDialogOpened(false);
-
-    const openHandler = () => setAddDialogOpened(true);
+    const { languages } = useLanguagesStore();
 
     return (
         <div className={styles.box}>
@@ -30,7 +28,7 @@ const Dictionaries: FC = () => {
                 <Grid item>
                     <Paper variant="outlined" className={c(styles.card, styles.addLanguage)}>
                         <Tooltip title="Добавить язык">
-                            <IconButton size="medium" onClick={openHandler}>
+                            <IconButton size="medium" onClick={openDialogHandler(DialogNames.ADD_DICTIONARY_DIALOG)}>
                                 <AddIcon fontSize="medium" />
                             </IconButton>
                         </Tooltip>
@@ -38,12 +36,12 @@ const Dictionaries: FC = () => {
                 </Grid>
             </Grid>
 
-            <AddDictionaryForm isOpened={isAddDialogOpened} closeDialog={closeHandler} />
-            <DeleteConfirmation />
-            <EditLanguageName />
+            <AddDictionaryDialog />
+            <DeleteLanguageDialog />
+            <EditLanguageNameDialog />
             <LearnWordsDialog />
         </div>
     );
 };
 
-export default Dictionaries;
+export default observer(Dictionaries);

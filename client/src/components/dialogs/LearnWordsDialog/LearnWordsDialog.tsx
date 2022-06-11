@@ -1,31 +1,32 @@
-import { Button, Dialog, DialogActions, DialogContent, Grid, Typography } from '@mui/material';
-import { FC, useEffect } from 'react';
-import { useAppContext } from 'context/AppContext';
-import { useLearnContext } from 'context/LearnContext';
+import { Button, DialogActions, DialogContent, Grid, Typography } from '@mui/material';
+import { FC } from 'react';
 import LearnWords from 'components/LearnWords';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import styles from './LearnWordsDialog.module.scss';
+import { useLanguagesStore } from 'context/StoreContext';
+import { CustomDialog } from 'components/UI/CustomDialog';
+import { DialogNames } from '../Dialog.types';
+import { closeDialogHandler } from 'components/UI/CustomDialog/controllers';
+import { observer } from 'mobx-react-lite';
 
 const LearnWordsDialog: FC = () => {
-    const { chosenLanguage, languages, chooseLanguage } = useAppContext();
-    const { isLearnWordsDialogOpened, closeLearnWordsDialog } = useLearnContext();
+    const { selectedLanguage } = useLanguagesStore();
 
-    useEffect(() => {
-        if (chosenLanguage !== null) {
-            chooseLanguage(chosenLanguage.id);
-        }
-    }, [languages, chosenLanguage, chooseLanguage]);
+    // useEffect(() => {
+    //     if (selectedLanguage !== null) {
+    //         selectLanguage(selectedLanguage.id);
+    //     }
+    // }, [languages, selectedLanguage, selectLanguage]);
 
-    if (chosenLanguage === null) return null;
+    if (selectedLanguage === null) return null;
 
-    const wordsToLearnAmount = chosenLanguage.wordsToLearn.length;
+    const wordsToLearnAmount = selectedLanguage.wordsToLearn.length;
 
     return (
-        <Dialog
-            open={isLearnWordsDialogOpened}
+        <CustomDialog
+            id={DialogNames.LEARN_WORDS_DIALOG}
             maxWidth={wordsToLearnAmount === 0 ? 'sm' : 'md'}
             fullWidth
-            onClose={closeLearnWordsDialog}
             className={styles.learnWordsDialog}
         >
             <DialogContent>
@@ -41,14 +42,14 @@ const LearnWordsDialog: FC = () => {
                         </Grid>
                     </Grid>
                 ) : (
-                    <LearnWords language={chosenLanguage} />
+                    <LearnWords language={selectedLanguage} />
                 )}
             </DialogContent>
             <DialogActions>
-                <Button onClick={closeLearnWordsDialog}>Закрыть</Button>
+                <Button onClick={closeDialogHandler(DialogNames.LEARN_WORDS_DIALOG)}>Закрыть</Button>
             </DialogActions>
-        </Dialog>
+        </CustomDialog>
     );
 };
 
-export default LearnWordsDialog;
+export default observer(LearnWordsDialog);

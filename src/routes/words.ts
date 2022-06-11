@@ -5,7 +5,7 @@ import validate from '../middleware/validate';
 
 const router = Router();
 
-router.get('/search/:word(*)', validate(searchWordSchema, { validateParams: true }), WordsController.searchWord);
+router.get('/translate/:word(*)', validate(searchWordSchema, { validateParams: true }), WordsController.translateWord);
 
 router.post('/add', validate(addWordSchema), WordsController.addWord);
 

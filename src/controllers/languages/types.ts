@@ -1,5 +1,5 @@
 export interface AddLanguageReq {
-    languageName: string;
+    langName: string;
 }
 
 export interface DeleteLanguageReq {
@@ -8,5 +8,5 @@ export interface DeleteLanguageReq {
 
 export interface EditLanguageNameReq {
     langId: string;
-    languageName: string;
+    langName: string;
 }

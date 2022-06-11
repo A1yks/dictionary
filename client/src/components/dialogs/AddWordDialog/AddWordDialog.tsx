@@ -1,47 +1,35 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import { Button, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Word } from 'types/common';
 import { LoadingButton } from '@mui/lab';
-import { useAppContext } from 'context/AppContext';
-import WordAdditionError from 'errors/WordAdditionError';
 import WordsListItem from 'components/pages/Words/WordsList/WordsListItem';
-import { DialogProps } from '../Dialog.types';
-import React from 'react';
-import API from 'utils/api';
+import { DialogNames } from '../Dialog.types';
+import WordsAPI from 'api/WordsAPI';
+import { useWordsStore } from 'context/StoreContext';
+import { observer } from 'mobx-react-lite';
+import { CustomDialog } from 'components/UI/CustomDialog';
+import { closeDialog } from 'components/UI/CustomDialog/controllers';
 
-const AddWordDialog: FC<DialogProps> = (props) => {
-    const context = useAppContext();
+const AddWordDialog: FC = () => {
+    const { addWord, loading } = useWordsStore();
     const { handleSubmit, clearErrors, resetField, control, trigger } = useForm({ mode: 'onSubmit', reValidateMode: 'onSubmit' });
     const [wordLoading, setWordLoading] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(false);
     const [wordInfo, setWordInfo] = useState<Word | null>(null);
     const [word, setWord] = useState<string>('');
-    const { addWord } = context;
-    const chosenLanguage = context.chosenLanguage!;
 
     function closeHandler() {
         setWord('');
         setWordInfo(null);
         resetField('add-word');
         clearErrors('add-word');
-        props.closeDialog();
+        closeDialog(DialogNames.ADD_WORD_DIALOG);
     }
 
     async function submitHandler() {
         if (wordInfo === null) return;
 
-        try {
-            setLoading(true);
-            await addWord(chosenLanguage.id, wordInfo);
-        } catch (err) {
-            if (err instanceof WordAdditionError) {
-                console.error(err);
-            }
-        } finally {
-            setLoading(false);
-        }
-
+        await addWord(wordInfo);
         closeHandler();
     }
 
@@ -49,9 +37,9 @@ const AddWordDialog: FC<DialogProps> = (props) => {
         try {
             setWordLoading(true);
 
-            const result = await API<Word>(`/words/search/${encodeURIComponent(word.trim())}`);
+            const wordInfo = await WordsAPI.translateWord(word);
 
-            setWordInfo(result.data);
+            setWordInfo(wordInfo);
         } catch (err) {
             setWordInfo(null);
             console.error(err);
@@ -77,7 +65,7 @@ const AddWordDialog: FC<DialogProps> = (props) => {
     }, [word]);
 
     return (
-        <Dialog open={props.isOpened} onClose={closeHandler}>
+        <CustomDialog id={DialogNames.ADD_WORD_DIALOG}>
             <form onSubmit={handleSubmit(submitHandler)}>
                 <DialogTitle>Добавить слово</DialogTitle>
                 <DialogContent>
@@ -122,8 +110,8 @@ const AddWordDialog: FC<DialogProps> = (props) => {
                     </LoadingButton>
                 </DialogActions>
             </form>
-        </Dialog>
+        </CustomDialog>
     );
 };
 
-export default React.memo(AddWordDialog);
+export default observer(AddWordDialog);

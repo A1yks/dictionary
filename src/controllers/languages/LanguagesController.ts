@@ -10,10 +10,10 @@ class LanguagesController {
     }
 
     async addLanguage(req: Server.Request<AddLanguageReq>, res: Server.Response) {
-        const { languageName } = req.body;
+        const { langName } = req.body;
 
         try {
-            const language = await LanguagesService.addLanguage(languageName);
+            const language = await LanguagesService.addLanguage(langName);
 
             res.status(201).json({ data: language });
         } catch (err) {
@@ -39,10 +39,10 @@ class LanguagesController {
     }
 
     async editLanguageName(req: Server.Request<EditLanguageNameReq>, res: Server.Response) {
-        const { langId, languageName } = req.body;
+        const { langId, langName } = req.body;
 
         try {
-            const result = await LanguagesService.editLanguageName(langId, languageName);
+            const result = await LanguagesService.editLanguageName(langId, langName);
 
             if (isServiceError(result)) {
                 return res.status(result.status).json({ error: result.error });

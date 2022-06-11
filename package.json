@@ -4,7 +4,7 @@
     "description": "dictionary app server",
     "main": "src/server.ts",
     "scripts": {
-        "server": "nodemon --watch . --ext \"ts,json\" --exec \"ts-node --files src/server.ts\"",
+        "server": "nodemon --watch ./src --ext \"ts,json\" --exec \"ts-node --files src/server.ts\"",
         "client": "npm start --prefix client",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "start": "cross-env NODE_ENV=production node build/server.js",

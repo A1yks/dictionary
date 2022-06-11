@@ -1,11 +1,12 @@
 import { Button, Grid, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 import styles from './LearnWords.module.scss';
-import { useAppContext } from 'context/AppContext';
 import { LearnWordsProps, WordGrade } from './LearnWords.types';
+import { observer } from 'mobx-react-lite';
+import { useWordsStore } from 'context/StoreContext';
 
 const LearnWords: FC<LearnWordsProps> = (props) => {
-    const { learnWord } = useAppContext();
+    const { learnWord } = useWordsStore();
     const [showTranslation, setShowTranslation] = useState<boolean>(false);
     const { wordsToLearn } = props.language;
     const word = wordsToLearn[0];
@@ -15,7 +16,7 @@ const LearnWords: FC<LearnWordsProps> = (props) => {
     }
 
     function nextWord() {
-        learnWord(props.language.id, word);
+        learnWord(word);
     }
 
     function gradeWord(grade: WordGrade) {
@@ -73,4 +74,4 @@ const LearnWords: FC<LearnWordsProps> = (props) => {
     );
 };
 
-export default LearnWords;
+export default observer(LearnWords);

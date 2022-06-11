@@ -1,47 +1,48 @@
 import { Container, Grid } from '@mui/material';
 import { FC, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAppContext } from 'context/AppContext';
 import { RouteParams } from 'types/common';
 import WordsLeftPanel from './WordsLeftPanel';
 import styles from './Words.module.scss';
 import NoSuchLanguageError from 'errors/NoSuchLanguageError';
-import PageLoader from 'components/ui/PageLoader';
+import PageLoader from 'components/UI/PageLoader';
 import WordsRightPanel from './WordsRightPanel';
-import DeleteWordConfirmation from 'components/dialogs/DeleteWordConfirmation';
+import DeleteWordConfirmationDialog from 'components/dialogs/DeleteWordConfirmationDialog';
 import ShowWordFullInfoDialog from 'components/dialogs/ShowWordFullInfoDialog';
 import LearnWordsDialog from 'components/dialogs/LearnWordsDialog';
+import { useLanguagesStore } from 'context/StoreContext';
+import { observer } from 'mobx-react-lite';
 
 const Words: FC = () => {
-    const { chosenLanguage, chooseLanguage, languages } = useAppContext();
+    const { selectedLanguage, selectLanguage, languages } = useLanguagesStore();
     const { langId } = useParams<RouteParams>();
     const navigate = useNavigate();
 
-    const updateChosenLanguage = useCallback(() => {
+    const updateSelectedLanguage = useCallback(() => {
         if (langId !== undefined) {
             try {
-                chooseLanguage(langId);
+                selectLanguage(langId);
             } catch (err) {
                 if (err instanceof NoSuchLanguageError) {
-                    navigate('/');
+                    return navigate('/');
                 }
 
                 console.error(err);
             }
         }
-    }, [chooseLanguage, langId, navigate]);
+    }, [selectLanguage, langId, navigate]);
 
     useEffect(() => {
-        if (chosenLanguage === null) {
-            updateChosenLanguage();
+        if (selectedLanguage === null) {
+            updateSelectedLanguage();
         }
-    }, [chosenLanguage, updateChosenLanguage]);
+    }, [selectedLanguage, updateSelectedLanguage]);
 
     useEffect(() => {
-        updateChosenLanguage();
-    }, [languages, updateChosenLanguage]);
+        updateSelectedLanguage();
+    }, [languages, updateSelectedLanguage]);
 
-    if (chosenLanguage === null) {
+    if (selectedLanguage === null) {
         return <PageLoader />;
     }
 
@@ -58,11 +59,11 @@ const Words: FC = () => {
                 </Grid>
             </Container>
 
-            <DeleteWordConfirmation />
+            <DeleteWordConfirmationDialog />
             <ShowWordFullInfoDialog />
             <LearnWordsDialog />
         </div>
     );
 };
 
-export default Words;
+export default observer(Words);

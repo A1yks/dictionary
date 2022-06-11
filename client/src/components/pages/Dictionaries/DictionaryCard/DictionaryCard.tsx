@@ -4,22 +4,25 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import parentStyles from '../Dictionaries.module.scss';
 import styles from './DictionaryCard.module.scss';
-import { useAppContext } from 'context/AppContext';
 import { Link } from 'react-router-dom';
-import { useDictionariesContext } from 'context/DictionariesContext';
-import { useLearnContext } from 'context/LearnContext';
 import { DictionaryCardProps } from './DictionaryCard.types';
+import { useDictionariesStore, useLanguagesStore } from 'context/StoreContext';
+import { DialogNames } from 'components/dialogs/Dialog.types';
+import { openDialog, openDialogHandler } from 'components/UI/CustomDialog/controllers';
+import { observer } from 'mobx-react-lite';
+import { flushSync } from 'react-dom';
 
 const DictionaryCard: FC<DictionaryCardProps> = (props) => {
-    const { chooseLanguage } = useAppContext();
-    const { setWorkingLanguageId, openEditDialog, openDeleteDialog } = useDictionariesContext();
-    const { openLearnWordsDialog } = useLearnContext();
+    const { setWorkingLanguageId } = useDictionariesStore();
+    const { selectLanguage } = useLanguagesStore();
+    const openEditDialog = openDialogHandler(DialogNames.EDIT_LANGUAGE_NAME_DIALOG);
+    const openDeleteDialog = openDialogHandler(DialogNames.DELETE_LANGUAGE_DIALOG);
 
     function chooseCurrentLanguage() {
-        chooseLanguage(props.language);
+        selectLanguage(props.language);
     }
 
-    function openDialogHandler(callback: () => void) {
+    function openDialogWrapper(callback: () => void) {
         return () => {
             setWorkingLanguageId(props.language.id);
             callback();
@@ -27,8 +30,8 @@ const DictionaryCard: FC<DictionaryCardProps> = (props) => {
     }
 
     function openLearnWordsDialogHandler() {
-        chooseCurrentLanguage();
-        openLearnWordsDialog();
+        flushSync(chooseCurrentLanguage);
+        openDialog(DialogNames.LEARN_WORDS_DIALOG);
     }
 
     return (
@@ -65,12 +68,12 @@ const DictionaryCard: FC<DictionaryCardProps> = (props) => {
 
                     <div className={styles.iconsWrapper}>
                         <Tooltip title="Редактировать название">
-                            <IconButton size="medium" className={styles.icon} onClick={openDialogHandler(openEditDialog)}>
+                            <IconButton size="medium" className={styles.icon} onClick={openDialogWrapper(openEditDialog)}>
                                 <EditIcon fontSize="medium" />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Удалить язык">
-                            <IconButton size="medium" className={styles.icon} onClick={openDialogHandler(openDeleteDialog)}>
+                            <IconButton size="medium" className={styles.icon} onClick={openDialogWrapper(openDeleteDialog)}>
                                 <DeleteIcon fontSize="medium" />
                             </IconButton>
                         </Tooltip>
@@ -81,4 +84,4 @@ const DictionaryCard: FC<DictionaryCardProps> = (props) => {
     );
 };
 
-export default DictionaryCard;
+export default observer(DictionaryCard);

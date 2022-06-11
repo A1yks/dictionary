@@ -1,22 +1,23 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Checkbox, FormControlLabel, Paper, Typography } from '@mui/material';
 import styles from './WordsRightPanel.module.scss';
-import Search from 'components/ui/Search';
+import Search from 'components/UI/Search';
 import WordsList from '../WordsList';
-import { useAppContext } from 'context/AppContext';
 import { Word } from 'types/common';
-import { useWordsContext } from 'context/WordsContext';
+import { useLanguagesStore, useWordsStore } from 'context/StoreContext';
+import { observer } from 'mobx-react-lite';
 
 const WordsRightPanel: FC = () => {
-    const context = useAppContext();
-    const chosenLanguage = context.chosenLanguage!;
-    const [words, setWords] = useState<Word[]>(chosenLanguage.words);
+    const { selectedLanguage } = useLanguagesStore();
+    const [words, setWords] = useState<Word[]>(selectedLanguage!.words);
     const [searchValue, setSearchValue] = useState<string>('');
-    const { showTranslation, setShowTranslation } = useWordsContext();
+    const { showTranslation, setShowTranslation } = useWordsStore();
 
     const filterWords = useCallback(() => {
-        setWords(chosenLanguage.words.filter((word) => new RegExp(`^${searchValue}`, 'i').test(word.source)));
-    }, [chosenLanguage.words, searchValue]);
+        if (selectedLanguage === null) return;
+
+        setWords(selectedLanguage.words.filter((word) => new RegExp(`^${searchValue}`, 'i').test(word.source)));
+    }, [selectedLanguage, searchValue]);
 
     function search(e: React.ChangeEvent<HTMLInputElement>) {
         setSearchValue(e.target.value);
@@ -28,7 +29,7 @@ const WordsRightPanel: FC = () => {
 
     useEffect(() => {
         filterWords();
-    }, [filterWords]);
+    }, [filterWords, selectedLanguage?.words]);
 
     return (
         <div className={styles.wordsRightPanel}>
@@ -47,4 +48,4 @@ const WordsRightPanel: FC = () => {
     );
 };
 
-export default WordsRightPanel;
+export default observer(WordsRightPanel);

@@ -4,7 +4,7 @@ import translate from '../../utils/translate';
 import { DeleteWordsRes } from './types';
 
 class WordsService {
-    async searchWord(word: string): Promise<Partial<IWord> | Service.Error> {
+    async translateWord(word: string): Promise<Partial<IWord> | Service.Error> {
         const translation = await translate(word);
 
         if (translation === null) {

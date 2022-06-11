@@ -1,25 +1,27 @@
-import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
+import { Button, DialogActions, DialogContent } from '@mui/material';
 import { FC } from 'react';
-import { useWordsContext } from 'context/WordsContext';
 import WordFullInfo from 'components/pages/Words/WordFullInfo';
+import { CustomDialog } from 'components/UI/CustomDialog';
+import { DialogNames } from '../Dialog.types';
+import { closeDialogHandler } from 'components/UI/CustomDialog/controllers';
+import { useWordsStore } from 'context/StoreContext';
+import { observer } from 'mobx-react-lite';
 
 const ShowWordFullInfoDialog: FC = () => {
-    const { isWordFullInfoDialogOpened, closeWordFullInfoDialog, wordInfo } = useWordsContext();
+    const { wordInfo } = useWordsStore();
 
-    if (wordInfo === null) {
-        return null;
-    }
+    if (wordInfo === null) return null;
 
     return (
-        <Dialog open={isWordFullInfoDialogOpened} onClose={closeWordFullInfoDialog} maxWidth="md" fullWidth>
+        <CustomDialog id={DialogNames.SHOW_WORD_FULL_INFO_DIALOG} maxWidth="md" fullWidth>
             <DialogContent>
                 <WordFullInfo wordInfo={wordInfo} />
             </DialogContent>
             <DialogActions>
-                <Button onClick={closeWordFullInfoDialog}>Закрыть</Button>
+                <Button onClick={closeDialogHandler(DialogNames.SHOW_WORD_FULL_INFO_DIALOG)}>Закрыть</Button>
             </DialogActions>
-        </Dialog>
+        </CustomDialog>
     );
 };
 
-export default ShowWordFullInfoDialog;
+export default observer(ShowWordFullInfoDialog);

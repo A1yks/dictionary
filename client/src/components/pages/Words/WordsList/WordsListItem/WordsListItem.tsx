@@ -1,54 +1,17 @@
 import { CircularProgress, IconButton, Paper, Tooltip, Typography } from '@mui/material';
-import { FC, useEffect, useRef } from 'react';
+import { FC } from 'react';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteIcon from '@mui/icons-material/Delete';
 import styles from './WordListItem.module.scss';
-import { useWordsContext } from 'context/WordsContext';
 import c from 'classnames';
 import { WordListItemProps } from './WordListItem.types';
-
-// TODO add transcription
+import useAudio from './hooks/useAudio';
+import useDialogs from './hooks/useDialogs';
 
 const WordsListItem: FC<WordListItemProps> = (props) => {
-    const { setWordToDelete, openDeleteWordDialog, setWordInfo, openWordFullInfoDialog } = useWordsContext();
-    const audio = useRef<HTMLAudioElement | null>(null);
-
-    useEffect(() => {
-        if (audio.current === null) {
-            audio.current = new Audio();
-        }
-
-        return () => {
-            if (audio.current !== null) {
-                audio.current.removeAttribute('src');
-                audio.current.load();
-                audio.current = null;
-            }
-        };
-    }, []);
-
-    function playWord() {
-        if (audio.current !== null && props.wordInfo?.phonetic?.audio) {
-            audio.current.src = props.wordInfo.phonetic.audio;
-            audio.current.load();
-            audio.current.play();
-        }
-    }
-
-    function openWordFullInfoDialogHandler() {
-        if (props.wordInfo !== null) {
-            setWordInfo(props.wordInfo);
-            openWordFullInfoDialog();
-        }
-    }
-
-    function openDeleteWordDialogHandler() {
-        if (props.wordInfo !== null) {
-            setWordToDelete(props.wordInfo);
-            openDeleteWordDialog();
-        }
-    }
+    const { openDeleteWordDialogHandler, openWordFullInfoDialogHandler } = useDialogs(props.wordInfo);
+    const { playWord, audioLoading } = useAudio(props.wordInfo?.phonetic?.audio);
 
     if (props.loading) {
         return (
@@ -85,8 +48,8 @@ const WordsListItem: FC<WordListItemProps> = (props) => {
                 <div className={styles.buttons}>
                     {props.wordInfo?.phonetic?.audio && (
                         <Tooltip title="Прослушать произношение">
-                            <IconButton onClick={playWord}>
-                                <VolumeUpIcon />
+                            <IconButton onClick={playWord} disabled={audioLoading}>
+                                {audioLoading ? <CircularProgress size={24} color="inherit" /> : <VolumeUpIcon />}
                             </IconButton>
                         </Tooltip>
                     )}

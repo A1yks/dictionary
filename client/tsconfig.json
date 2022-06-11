@@ -16,7 +16,10 @@
         "noEmit": true,
         "jsx": "react-jsx",
         "checkJs": true,
-        "baseUrl": "./src"
+        "baseUrl": "./src",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "sourceMap": true
     },
     "include": ["src", "declarations.d.ts"],
     "exclude": ["node_modules"]
