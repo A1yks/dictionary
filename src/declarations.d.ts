@@ -6,6 +6,7 @@ declare global {
 
         export interface Request<Body = any, Params = any> extends express.Request<Params> {
             body: Body;
+            userId?: string;
         }
 
         export type Response<T = any> = express.Response<ResponseBody<T>>;

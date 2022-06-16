@@ -2,7 +2,7 @@ import LanguagesAPI from 'api/LanguagesAPI';
 import NoSuchLanguageError from 'errors/NoSuchLanguageError';
 import { makeAutoObservable } from 'mobx';
 import Request from 'stores/decorators/Request';
-import RootStore from 'stores/RootStore/RootStore';
+import RootStore from 'stores/RootStore';
 import { IRequest } from 'stores/types';
 import { Language } from 'types/common';
 
@@ -11,7 +11,7 @@ class LanguagesStore implements IRequest {
     loading: boolean = false;
     languages: Language[] = [];
     selectedLanguage: Language | null = null;
-    languagesLoaded: boolean = false;
+    // languagesLoaded: boolean = false;
 
     constructor(private rootStore: RootStore) {
         makeAutoObservable(this, {}, { autoBind: true });
@@ -22,7 +22,7 @@ class LanguagesStore implements IRequest {
         const languages = await LanguagesAPI.getLanguages();
 
         this.setLanguages(languages);
-        this.setLanguagesLoaded(true);
+        // this.setLanguagesLoaded(true);
     }
 
     @Request
@@ -74,13 +74,13 @@ class LanguagesStore implements IRequest {
         this.error = error;
     }
 
-    private setLanguagesLoaded(loaded: boolean) {
-        this.languagesLoaded = loaded;
-    }
-
-    private setLanguages(languages: Language[]) {
+    setLanguages(languages: Language[]) {
         this.languages = languages;
     }
+
+    // private setLanguagesLoaded(loaded: boolean) {
+    //     this.languagesLoaded = loaded;
+    // }
 }
 
 export default LanguagesStore;

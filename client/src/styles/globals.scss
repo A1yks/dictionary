@@ -1,15 +1,17 @@
 html {
-	font-size: 16px;
+    font-size: 16px;
 }
 
 #root {
-	display: flex;
-	width: 100%;
+    display: flex;
+    width: 100%;
 }
 
 .app {
-	width: 100%;
-	font-size: 1.6rem;
-	background: #eceff1;
-	min-height: 100vh;
+    width: 100%;
+    font-size: 1.6rem;
+    background: #eceff1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }

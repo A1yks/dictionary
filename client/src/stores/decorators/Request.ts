@@ -16,15 +16,18 @@ function Request<T extends IRequest>(
         } catch (err) {
             if (typeof err === 'string') {
                 this.setError(err);
-                throw new Error(err);
+                return;
+                // throw new Error(err);
             }
 
             if (err instanceof Error) {
                 this.setError(err.message);
-                throw new Error(err.message);
+                return;
+                // throw new Error(err.message);
             }
 
             this.setError('Произошла неизвестная ошибка');
+            // throw new Error('Произошла неизвестная ошибка');
         } finally {
             this.setLoading(false);
         }

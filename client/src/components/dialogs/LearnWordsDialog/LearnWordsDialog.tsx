@@ -1,6 +1,6 @@
 import { Button, DialogActions, DialogContent, Grid, Typography } from '@mui/material';
 import { FC } from 'react';
-import LearnWords from 'components/LearnWords';
+import LearnWords from 'components/helpers/LearnWords';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import styles from './LearnWordsDialog.module.scss';
 import { useLanguagesStore } from 'context/StoreContext';

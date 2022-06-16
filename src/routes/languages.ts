@@ -2,15 +2,16 @@ import { Router } from 'express';
 import LanguagesController from '../controllers/languages/LanguagesController';
 import { addLanguageSchema, deleteLanguageSchema, editLanguageNameSchema } from '../controllers/languages/validation';
 import validate from '../middleware/validate';
+import verifyToken from '../middleware/verifyToken';
 
 const router = Router();
 
-router.get('/', LanguagesController.getLanguages);
+router.get('/', verifyToken, LanguagesController.getLanguages);
 
-router.post('/add', validate(addLanguageSchema), LanguagesController.addLanguage);
+router.post('/add', [verifyToken, validate(addLanguageSchema)], LanguagesController.addLanguage);
 
-router.delete('/delete', validate(deleteLanguageSchema), LanguagesController.deleteLanguage);
+router.delete('/delete', [verifyToken, validate(deleteLanguageSchema)], LanguagesController.deleteLanguage);
 
-router.patch('/edit', validate(editLanguageNameSchema), LanguagesController.editLanguageName);
+router.patch('/edit', [verifyToken, validate(editLanguageNameSchema)], LanguagesController.editLanguageName);
 
 export default router;

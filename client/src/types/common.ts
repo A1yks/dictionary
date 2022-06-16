@@ -39,3 +39,8 @@ export interface Language {
 export type RouteParams = {
     langId?: string;
 };
+
+export interface User {
+    login: string;
+    languages: Language[];
+}

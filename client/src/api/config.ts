@@ -3,6 +3,7 @@ import { ServerError, ServerResponse } from './types';
 
 const instance = axios.create({
     baseURL: '/api',
+    withCredentials: true,
 });
 
 instance.interceptors.response.use(

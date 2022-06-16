@@ -1,14 +1,26 @@
 import Language, { ILanguage } from '../../models/Language';
+import User from '../../models/User';
 
 class LanguagesService {
-    async getLanguages() {
-        const languages = await Language.find({}).populate('words wordsToLearn');
+    async getLanguages(userId: string): Promise<Service.Error | ILanguage[]> {
+        const user = await User.findById(userId).lean();
+
+        if (!user) {
+            return { status: 404, error: 'Пользователь не найден' };
+        }
+
+        const languages = await Language.find({ _id: { $in: user.languages } }).populate('words wordsToLearn');
 
         return languages;
     }
 
-    async addLanguage(langName: string) {
-        const language = new Language({ name: langName });
+    async addLanguage(userId: string, langName: string): Promise<Service.Error | ILanguage> {
+        const language = new Language({ name: langName, userId });
+        const result = await User.findByIdAndUpdate(userId, { $push: { languages: language._id } });
+
+        if (!result) {
+            return { status: 404, error: 'Пользователь не найден' };
+        }
 
         await language.save();
 
