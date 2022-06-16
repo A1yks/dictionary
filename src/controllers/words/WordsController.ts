@@ -1,6 +1,7 @@
 import WordsService from '../../services/words/WordsService';
 import { isServiceError } from '../../types/guards';
-import { AddWordReq, DeleteWordsReq, SearchWordParams } from './types';
+import handleServiceResult from '../../utils/handleServiceResult';
+import { AddWordReq, DeleteWordsReq, LearnWordReq, SearchWordParams } from './types';
 
 class WordsController {
     async translateWord(req: Server.Request<unknown, SearchWordParams>, res: Server.Response) {
@@ -48,6 +49,18 @@ class WordsController {
             res.status(200).json({ data: result });
         } catch (err) {
             res.status(500).json({ error: 'Произошла ошибка при попытке удалить слово' });
+        }
+    }
+
+    async learnWord(req: Server.Request<LearnWordReq>, res: Server.Response) {
+        const { wordId, feedback } = req.body;
+
+        try {
+            const result = await WordsService.learnWord(wordId, feedback);
+
+            handleServiceResult(result, res);
+        } catch (err) {
+            res.status(500).json({ error: 'Произошла ошибка при попытке выучить слово' });
         }
     }
 }

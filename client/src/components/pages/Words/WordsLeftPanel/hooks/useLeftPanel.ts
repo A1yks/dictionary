@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef } from 'react';
 
 function useLeftPanel() {
     const { selectedLanguage } = useLanguagesStore();
-    const { setShowTranslation, showTranslation } = useWordsStore();
+    const { setShowTranslation, showTranslation, wordsToLearn } = useWordsStore();
     const prevShowTranslationRef = useRef<boolean>(showTranslation);
     const isLearnWordsDialogOpened = dialogs[DialogNames.LEARN_WORDS_DIALOG]?.opened;
 
@@ -25,7 +25,7 @@ function useLeftPanel() {
         throw new TypeError('selectedLanguage should not be null');
     }
 
-    return { selectedLanguage, learnWords };
+    return { selectedLanguage, wordsToLearn, learnWords };
 }
 
 export default useLeftPanel;

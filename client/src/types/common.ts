@@ -18,13 +18,18 @@ export interface PartsOfSpeech<T = string> {
     participle: T[];
 }
 
-export interface Word {
+export interface WordInfo {
     source: string;
     translations: PartsOfSpeech;
     definitions: PartsOfSpeech<Definition>;
     phonetic?: Phonetic;
     firstTranslations: string[];
     hasDefinitions: boolean;
+}
+
+export interface Word extends WordInfo {
+    id: string;
+    repeated: number;
     repeatAt: number;
 }
 
@@ -43,4 +48,11 @@ export type RouteParams = {
 export interface User {
     login: string;
     languages: Language[];
+}
+
+export enum LearnFeedbacks {
+    EASY = 'easy',
+    NORMAL = 'normal',
+    HARD = 'hard',
+    SKIP = 'skip',
 }

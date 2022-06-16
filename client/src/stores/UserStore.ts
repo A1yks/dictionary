@@ -19,11 +19,14 @@ class UserStore implements IRequest {
         const user = await UserAPI.getUser();
 
         this.setUser(user);
-        this.rootStore.languagesStore.setLanguages(user.languages);
     }
 
     setUser(user: User | null) {
         this.user = user;
+
+        if (user !== null) {
+            this.rootStore.languagesStore.setLanguages(user.languages);
+        }
     }
 
     setLoading(loading: boolean) {

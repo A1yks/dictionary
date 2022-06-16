@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addWordSchema, deleteWordsSchema, searchWordSchema } from '../controllers/words/validation';
+import { addWordSchema, deleteWordsSchema, learnWordSchema, searchWordSchema } from '../controllers/words/validation';
 import WordsController from '../controllers/words/WordsController';
 import validate from '../middleware/validate';
 import verifyToken from '../middleware/verifyToken';
@@ -11,5 +11,7 @@ router.get('/translate/:word(*)', [verifyToken, validate(searchWordSchema, { val
 router.post('/add', [verifyToken, validate(addWordSchema)], WordsController.addWord);
 
 router.delete('/delete', [verifyToken, validate(deleteWordsSchema)], WordsController.deleteWords);
+
+router.patch('/learn', [verifyToken, validate(learnWordSchema)], WordsController.learnWord);
 
 export default router;

@@ -1,7 +1,7 @@
-import { Word } from 'types/common';
+import { WordInfo, Word } from 'types/common';
 
 export type WordListItemProps = {
-    wordInfo: Word | null;
+    wordInfo: WordInfo | Word | null;
     loading?: boolean;
     showActions?: boolean;
     showTranslation?: boolean;

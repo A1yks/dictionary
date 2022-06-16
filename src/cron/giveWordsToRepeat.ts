@@ -1,8 +1,11 @@
 import { CronJob } from 'cron';
+import Word from '../models/Word';
 
 async function giveWordsToRepeat() {
+    // const currTime = Math.trunc(Date.now() / 1000);
+
     try {
-        // const wordsToRepeat = await Language.fi
+        // const wordsToRepeat = await Word.find({repeatAt: {$gte: currTime}});
     } catch (err) {
         console.error(err);
     }

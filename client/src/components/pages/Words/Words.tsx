@@ -12,6 +12,7 @@ import ShowWordFullInfoDialog from 'components/dialogs/ShowWordFullInfoDialog';
 import LearnWordsDialog from 'components/dialogs/LearnWordsDialog';
 import { useLanguagesStore } from 'context/StoreContext';
 import { observer } from 'mobx-react-lite';
+import NavbarLayout from 'components/layouts/NavbarLayout';
 
 const Words: FC = () => {
     const { selectedLanguage, selectLanguage, languages } = useLanguagesStore();
@@ -47,21 +48,23 @@ const Words: FC = () => {
     }
 
     return (
-        <div>
-            <Container maxWidth="lg" className={styles.wordsContainer}>
-                <Grid container className={styles.panelsWrapper}>
-                    <Grid item xs={4}>
-                        <WordsLeftPanel />
+        <div className="page">
+            <NavbarLayout>
+                <Container maxWidth="lg" className={styles.wordsContainer}>
+                    <Grid container className={styles.panelsWrapper}>
+                        <Grid item xs={4}>
+                            <WordsLeftPanel />
+                        </Grid>
+                        <Grid item xs={8} height="100%">
+                            <WordsRightPanel />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={8}>
-                        <WordsRightPanel />
-                    </Grid>
-                </Grid>
-            </Container>
+                </Container>
 
-            <DeleteWordConfirmationDialog />
-            <ShowWordFullInfoDialog />
-            <LearnWordsDialog />
+                <DeleteWordConfirmationDialog />
+                <ShowWordFullInfoDialog />
+                <LearnWordsDialog />
+            </NavbarLayout>
         </div>
     );
 };

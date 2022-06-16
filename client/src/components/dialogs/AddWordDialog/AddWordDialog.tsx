@@ -1,7 +1,7 @@
 import { Button, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Word } from 'types/common';
+import { WordInfo } from 'types/common';
 import { LoadingButton } from '@mui/lab';
 import WordsListItem from 'components/pages/Words/WordsList/WordsListItem';
 import { DialogNames } from '../Dialog.types';
@@ -13,9 +13,9 @@ import { closeDialog } from 'components/UI/CustomDialog/controllers';
 
 const AddWordDialog: FC = () => {
     const { addWord, loading } = useWordsStore();
-    const { handleSubmit, clearErrors, resetField, control, trigger } = useForm({ mode: 'onSubmit', reValidateMode: 'onSubmit' });
+    const { handleSubmit, clearErrors, resetField, control, trigger, setError } = useForm({ mode: 'onSubmit', reValidateMode: 'onSubmit' });
     const [wordLoading, setWordLoading] = useState<boolean>(false);
-    const [wordInfo, setWordInfo] = useState<Word | null>(null);
+    const [wordInfo, setWordInfo] = useState<WordInfo | null>(null);
     const [word, setWord] = useState<string>('');
 
     function closeHandler() {
@@ -27,10 +27,16 @@ const AddWordDialog: FC = () => {
     }
 
     async function submitHandler() {
-        if (wordInfo === null) return;
+        try {
+            if (wordInfo === null) return;
 
-        await addWord(wordInfo);
-        closeHandler();
+            await addWord(wordInfo);
+            closeHandler();
+        } catch (err) {
+            if (err instanceof Error) {
+                setError('add-word', { message: err.message });
+            }
+        }
     }
 
     async function searchWord(word: string) {
@@ -76,7 +82,7 @@ const AddWordDialog: FC = () => {
                         control={control}
                         rules={{
                             required: { value: true, message: 'Введите слово' },
-                            validate: () => {
+                            validate() {
                                 if (wordLoading) return 'Перевод слова еще загружается';
 
                                 if (wordInfo === null) return 'Перевод для введенного слова отсутствует';

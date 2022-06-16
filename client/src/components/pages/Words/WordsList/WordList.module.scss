@@ -1,8 +1,9 @@
 .wordList {
-	overflow: hidden;
+    overflow-y: auto;
+    width: 100%;
 
-	& > div {
-		border: none;
-		border-radius: 0;
-	}
+    & > div {
+        border: none;
+        border-radius: 0;
+    }
 }

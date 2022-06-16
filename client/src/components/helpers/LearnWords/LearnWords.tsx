@@ -1,14 +1,24 @@
 import { Button, Grid, Typography } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import styles from './LearnWords.module.scss';
-import { LearnWordsProps, WordGrade } from './LearnWords.types';
+import { ButtonsLoading, LearnWordsProps } from './LearnWords.types';
 import { observer } from 'mobx-react-lite';
 import { useWordsStore } from 'context/StoreContext';
+import { LearnFeedbacks } from 'types/common';
+import { LoadingButton } from '@mui/lab';
 
 const LearnWords: FC<LearnWordsProps> = (props) => {
-    const { learnWord } = useWordsStore();
+    const { learnWord, wordsToLearn, loading } = useWordsStore();
     const [showTranslation, setShowTranslation] = useState<boolean>(false);
-    const { wordsToLearn } = props.language;
+    const defaultButtonsLoadingState: ButtonsLoading = useMemo(
+        () => ({
+            [LearnFeedbacks.EASY]: false,
+            [LearnFeedbacks.NORMAL]: false,
+            [LearnFeedbacks.HARD]: false,
+        }),
+        []
+    );
+    const [buttonsLoading, setButtonsLoading] = useState<ButtonsLoading>(defaultButtonsLoadingState);
     const word = wordsToLearn[0];
 
     function toggleTranslation() {
@@ -16,14 +26,21 @@ const LearnWords: FC<LearnWordsProps> = (props) => {
     }
 
     function nextWord() {
-        learnWord(word);
+        learnWord(word, LearnFeedbacks.SKIP);
     }
 
-    function gradeWord(grade: WordGrade) {
+    function gradeWord(feedback: LearnFeedbacks) {
         return () => {
-            nextWord();
+            setButtonsLoading((state) => ({ ...state, [feedback]: true }));
+            learnWord(word, feedback);
         };
     }
+
+    useEffect(() => {
+        if (!loading) {
+            setButtonsLoading(defaultButtonsLoadingState);
+        }
+    }, [loading, defaultButtonsLoadingState]);
 
     return (
         <Grid container direction="column" className={styles.learnWords} spacing={2}>
@@ -49,22 +66,40 @@ const LearnWords: FC<LearnWordsProps> = (props) => {
             <Grid container item className={styles.buttons}>
                 <Grid container item spacing={1} justifyContent="center">
                     <Grid item>
-                        <Button variant="contained" color="success" onClick={gradeWord(WordGrade.EASY)}>
+                        <LoadingButton
+                            variant="contained"
+                            color="success"
+                            onClick={gradeWord(LearnFeedbacks.EASY)}
+                            loading={buttonsLoading[LearnFeedbacks.EASY]}
+                            disabled={loading}
+                        >
                             Легко
-                        </Button>
+                        </LoadingButton>
                     </Grid>
                     <Grid item>
-                        <Button variant="contained" color="warning" onClick={gradeWord(WordGrade.NORMAL)}>
+                        <LoadingButton
+                            variant="contained"
+                            color="warning"
+                            onClick={gradeWord(LearnFeedbacks.NORMAL)}
+                            loading={buttonsLoading[LearnFeedbacks.NORMAL]}
+                            disabled={loading}
+                        >
                             Нормально
-                        </Button>
+                        </LoadingButton>
                     </Grid>
                     <Grid item>
-                        <Button variant="contained" color="error" onClick={gradeWord(WordGrade.HARD)}>
+                        <LoadingButton
+                            variant="contained"
+                            color="error"
+                            onClick={gradeWord(LearnFeedbacks.HARD)}
+                            loading={buttonsLoading[LearnFeedbacks.HARD]}
+                            disabled={loading}
+                        >
                             Сложно
-                        </Button>
+                        </LoadingButton>
                     </Grid>
                     <Grid item className={styles.skipBtn}>
-                        <Button variant="contained" color="secondary" onClick={nextWord}>
+                        <Button variant="contained" color="secondary" onClick={nextWord} disabled={loading}>
                             Пропустить
                         </Button>
                     </Grid>

@@ -1,10 +1,21 @@
-.iconsWrapper {
-    margin-left: auto;
+.appBar {
+    .usernameWrapper {
+        display: flex;
+        align-items: center;
+    }
+
+    .backArrowBtn {
+        margin-right: 8px;
+    }
 
     .icon {
         color: #fff;
+    }
 
-        &Btn {
+    .iconsWrapper {
+        margin-left: auto;
+
+        .iconBtn {
             &:not(:first-child) {
                 margin-left: 8px;
             }

@@ -1,11 +1,11 @@
-import { Language } from 'types/common';
-
-export enum WordGrade {
-    EASY,
-    NORMAL,
-    HARD,
-}
+import { Language, LearnFeedbacks } from 'types/common';
 
 export type LearnWordsProps = {
     language: Language;
+};
+
+export type ButtonsLoading = {
+    [LearnFeedbacks.EASY]: boolean;
+    [LearnFeedbacks.NORMAL]: boolean;
+    [LearnFeedbacks.HARD]: boolean;
 };

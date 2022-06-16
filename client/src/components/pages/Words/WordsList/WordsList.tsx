@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import WordsListItem from './WordsListItem';
 import styles from './WordList.module.scss';
 import { Paper } from '@mui/material';
@@ -14,4 +14,4 @@ const WordsList: FC<WordsListProps> = (props) => {
     );
 };
 
-export default WordsList;
+export default memo(WordsList);

@@ -3,7 +3,7 @@ import { FC } from 'react';
 import LearnWords from 'components/helpers/LearnWords';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import styles from './LearnWordsDialog.module.scss';
-import { useLanguagesStore } from 'context/StoreContext';
+import { useLanguagesStore, useWordsStore } from 'context/StoreContext';
 import { CustomDialog } from 'components/UI/CustomDialog';
 import { DialogNames } from '../Dialog.types';
 import { closeDialogHandler } from 'components/UI/CustomDialog/controllers';
@@ -11,6 +11,7 @@ import { observer } from 'mobx-react-lite';
 
 const LearnWordsDialog: FC = () => {
     const { selectedLanguage } = useLanguagesStore();
+    const { wordsToLearn } = useWordsStore();
 
     // useEffect(() => {
     //     if (selectedLanguage !== null) {
@@ -20,7 +21,7 @@ const LearnWordsDialog: FC = () => {
 
     if (selectedLanguage === null) return null;
 
-    const wordsToLearnAmount = selectedLanguage.wordsToLearn.length;
+    const wordsToLearnAmount = wordsToLearn.length;
 
     return (
         <CustomDialog

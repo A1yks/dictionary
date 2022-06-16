@@ -1,16 +1,16 @@
 import WordsAPI from 'api/WordsAPI';
-import { makeAutoObservable, observable } from 'mobx';
+import { makeAutoObservable, observable, runInAction } from 'mobx';
 import { MutableRefObject } from 'react';
 import Request from 'stores/decorators/Request';
 import RootStore from 'stores/RootStore';
 import { IRequest } from 'stores/types';
-import { Word } from 'types/common';
+import { LearnFeedbacks, WordInfo, Word } from 'types/common';
 
 class WordsStore implements IRequest {
     error: string = '';
     loading: boolean = false;
     wordToDeleteRef: MutableRefObject<Word | null> = { current: null };
-    wordInfo: Word | null = null;
+    wordInfo: WordInfo | null = null;
     showTranslation: boolean = true;
 
     constructor(private rootStore: RootStore) {
@@ -22,11 +22,13 @@ class WordsStore implements IRequest {
     }
 
     get wordsToLearn() {
-        return this.language?.wordsToLearn || null;
+        const currTime = Math.trunc(Date.now() / 1000);
+
+        return this.language?.words.filter((w) => currTime >= w.repeatAt) || [];
     }
 
-    @Request
-    async addWord(word: Word) {
+    @Request(true)
+    async addWord(word: WordInfo) {
         if (!this.language || !this.words) return;
 
         const addedWord = await WordsAPI.addWord(this.language.id, word);
@@ -44,17 +46,20 @@ class WordsStore implements IRequest {
         this.setWordsToLearn(wordsToLearn);
     }
 
-    async learnWord(word: Word) {
-        if (!this.language) return;
+    @Request
+    async learnWord(word: Word, feedback: LearnFeedbacks) {
+        const { repeatAt } = await WordsAPI.learnWord(word.id, feedback);
 
-        this.language.wordsToLearn = this.language.wordsToLearn.filter(({ source }) => word.source !== source);
+        runInAction(() => {
+            word.repeatAt = repeatAt;
+        });
     }
 
     setWordToDelete(word: Word) {
         this.wordToDeleteRef.current = word;
     }
 
-    setWordInfo(wordInfo: Word) {
+    setWordInfo(wordInfo: WordInfo) {
         this.wordInfo = wordInfo;
     }
 

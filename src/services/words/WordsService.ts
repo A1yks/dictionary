@@ -1,7 +1,9 @@
+import { LearnFeedbacks } from '../../controllers/words/types';
 import Language from '../../models/Language';
 import Word, { IWord } from '../../models/Word';
+import getNextRepeatTime from '../../utils/getNextRepeatTime';
 import translate from '../../utils/translate';
-import { DeleteWordsRes } from './types';
+import { DeleteWordsRes, LearnWordRes } from './types';
 
 class WordsService {
     async translateWord(word: string): Promise<Partial<IWord> | Service.Error> {
@@ -51,6 +53,17 @@ class WordsService {
         }
 
         return { words: language.words, wordsToLearn: language.wordsToLearn };
+    }
+
+    async learnWord(wordId: string, feedback: LearnFeedbacks): Promise<LearnWordRes | Service.Error> {
+        const repeatAt = getNextRepeatTime(feedback);
+        const result = await Word.findByIdAndUpdate(wordId, { $set: { repeatAt }, $inc: { repeated: 1 } });
+
+        if (!result) {
+            return { status: 404, error: 'Изучаемое слово не найдено' };
+        }
+
+        return { repeatAt };
     }
 }
 

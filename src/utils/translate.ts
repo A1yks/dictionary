@@ -1,6 +1,8 @@
 import axios, { AxiosError } from 'axios';
 import { IDefinition, IPartsOfSpeech, IPhonetic, IWord } from '../models/Word';
 
+// TODO move to skyeng api
+
 // Yandex english-russian dictionary
 
 interface YandexDictMeaning {

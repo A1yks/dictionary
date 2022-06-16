@@ -2,6 +2,7 @@ import User from '../../models/User';
 import bcrypt from 'bcrypt';
 import { AuthRes } from './types';
 import { signToken } from '../../utils/tokens';
+import UserService from '../user/UserService';
 
 const authError = 'Неверный логин и/или пароль';
 
@@ -36,6 +37,7 @@ class AuthService {
             return { status: 404, error: authError };
         }
 
+        await UserService.populateUser(user);
         const passwordsMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordsMatch) {

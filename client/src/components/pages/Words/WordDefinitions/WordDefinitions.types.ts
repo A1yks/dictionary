@@ -1,5 +1,5 @@
-import { Word } from 'types/common';
+import { WordInfo } from 'types/common';
 
 export type WordDefinitionProps = {
-    wordInfo: Word;
+    wordInfo: WordInfo;
 };

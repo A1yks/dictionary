@@ -33,7 +33,7 @@ const WordsRightPanel: FC = () => {
 
     return (
         <div className={styles.wordsRightPanel}>
-            <Search placeholder="Введите слово" onChange={search} />
+            <Search placeholder="Введите слово" onChange={search} fullWidth />
             <FormControlLabel control={<Checkbox disableRipple checked={showTranslation} onChange={toggleCheckbox} />} label="Отображать перевод" />
             {words.length === 0 ? (
                 <Paper variant="outlined" className={styles.noWords}>

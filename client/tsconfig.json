@@ -18,7 +18,7 @@
         "checkJs": true,
         "baseUrl": "./src",
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
+        "emitDecoratorMetadata": false,
         "sourceMap": true
     },
     "include": ["src", "declarations.d.ts"],

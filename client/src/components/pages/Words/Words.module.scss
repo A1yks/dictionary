@@ -1,8 +1,12 @@
 .wordsContainer {
-	padding-top: 1.5rem;
-	padding-bottom: 1.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
 
-	.panelsWrapper {
-		display: flex;
-	}
+    .panelsWrapper {
+        display: flex;
+        min-height: 0;
+    }
 }

@@ -1,5 +1,5 @@
 import { Model, model, ObjectId, Schema, SchemaDefinitionProperty } from 'mongoose';
-import getNextDayUnix from '../utils/getNextDayUnix';
+import getNextRepeatTime from '../utils/getNextRepeatTime';
 import schemaQueryHandler from '../utils/schemaQueryHandler';
 import transformObject from '../utils/transformObject';
 import Language from './Language';
@@ -33,6 +33,7 @@ export interface IWord {
     firstTranslations: string[];
     hasDefinitions: boolean;
     repeatAt: number;
+    repeated: number;
     language: ObjectId;
 }
 
@@ -66,7 +67,8 @@ const wordSchema = new Schema<IWord, Model<IWord>>(
             audio: String,
         },
         hasDefinitions: Boolean,
-        repeatAt: { type: Number, default: getNextDayUnix },
+        repeatAt: { type: Number, default: getNextRepeatTime },
+        repeated: { type: Number, default: 0 },
         language: { type: Schema.Types.ObjectId, ref: 'Language' },
     },
     {

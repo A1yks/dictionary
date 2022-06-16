@@ -1,9 +1,26 @@
 import { IRequest } from 'stores/types';
 
-function Request<T extends IRequest>(
+type RequestArgs<T> = DecoratorArgs<T> | [throwErrors: boolean];
+type DecoratorArgs<T> = [prototype: any, propName: string, descriptor: TypedPropertyDescriptor<(this: T, ...args: any[]) => Promise<any>>];
+
+function Request(throwErrors: boolean): typeof decorator;
+function Request<T extends IRequest>(...args: RequestArgs<T>): void;
+function Request<T extends IRequest>(...args: RequestArgs<T>) {
+    if (typeof args[0] === 'boolean') {
+        return function (...decoratorArgs: DecoratorArgs<T>) {
+            decorator(...decoratorArgs, true);
+        };
+    }
+
+    // @ts-ignore
+    decorator(...args);
+}
+
+function decorator<T extends IRequest>(
     prototype: any,
     propName: string,
-    descriptor: TypedPropertyDescriptor<(this: T, ...args: any[]) => Promise<any>>
+    descriptor: TypedPropertyDescriptor<(this: T, ...args: any[]) => Promise<any>>,
+    throwErrors = false
 ) {
     const originalFunc = descriptor.value;
 
@@ -16,18 +33,31 @@ function Request<T extends IRequest>(
         } catch (err) {
             if (typeof err === 'string') {
                 this.setError(err);
+
+                if (throwErrors) {
+                    throw new Error(err);
+                }
+
                 return;
-                // throw new Error(err);
             }
 
             if (err instanceof Error) {
                 this.setError(err.message);
+
+                if (throwErrors) {
+                    throw new Error(err.message);
+                }
+
                 return;
-                // throw new Error(err.message);
             }
 
-            this.setError('Произошла неизвестная ошибка');
-            // throw new Error('Произошла неизвестная ошибка');
+            const unknownError = 'Произошла неизвестная ошибка';
+
+            this.setError(unknownError);
+
+            if (throwErrors) {
+                throw new Error(unknownError);
+            }
         } finally {
             this.setLoading(false);
         }

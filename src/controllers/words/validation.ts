@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { IDefinition, IPartsOfSpeech, IPhonetic, IWord } from '../../models/Word';
 import objectIdValidation from '../../utils/objectIdValidation';
 import { langId } from '../languages/validation';
-import { AddWordReq, DeleteWordsReq, SearchWordParams } from './types';
+import { AddWordReq, DeleteWordsReq, LearnFeedbacks, LearnWordReq, SearchWordParams } from './types';
 
 function getPartsOfSpeechSchema(schema: Joi.Schema) {
     return Joi.object<IPartsOfSpeech>().keys({
@@ -15,6 +15,8 @@ function getPartsOfSpeechSchema(schema: Joi.Schema) {
         verb: Joi.array().items(schema),
     });
 }
+
+const wordId = Joi.string().required().custom(objectIdValidation);
 
 const phoneticSchema = Joi.object<IPhonetic>()
     .keys({
@@ -38,8 +40,9 @@ const clientWordSchema = Joi.object<Partial<IWord>>().keys({
 });
 
 const wordSchema = clientWordSchema.keys({
-    id: Joi.string().required().custom(objectIdValidation),
+    id: wordId,
     repeatAt: Joi.number().required(),
+    repeated: Joi.number(),
     language: langId,
 });
 
@@ -58,4 +61,11 @@ export const addWordSchema = Joi.object<AddWordReq>().keys({
 export const deleteWordsSchema = Joi.object<DeleteWordsReq>().keys({
     langId,
     words: Joi.array().items(wordSchema).required(),
+});
+
+export const learnWordSchema = Joi.object<LearnWordReq>().keys({
+    wordId,
+    feedback: Joi.string()
+        .required()
+        .valid(...Object.values(LearnFeedbacks)),
 });
