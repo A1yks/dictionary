@@ -5,7 +5,6 @@ import { RouteParams } from 'types/common';
 import WordsLeftPanel from './WordsLeftPanel';
 import styles from './Words.module.scss';
 import NoSuchLanguageError from 'errors/NoSuchLanguageError';
-import PageLoader from 'components/UI/PageLoader';
 import WordsRightPanel from './WordsRightPanel';
 import DeleteWordConfirmationDialog from 'components/dialogs/DeleteWordConfirmationDialog';
 import ShowWordFullInfoDialog from 'components/dialogs/ShowWordFullInfoDialog';
@@ -44,18 +43,24 @@ const Words: FC = () => {
     }, [languages, updateSelectedLanguage]);
 
     if (selectedLanguage === null) {
-        return <PageLoader />;
+        return null;
     }
 
     return (
         <div className="page">
             <NavbarLayout>
                 <Container maxWidth="lg" className={styles.wordsContainer}>
-                    <Grid container className={styles.panelsWrapper}>
-                        <Grid item xs={4}>
+                    <Grid
+                        container
+                        className={styles.panelsWrapper}
+                        direction={{ xs: 'column', lg: 'row' }}
+                        spacing={{ lg: 0, xs: 2 }}
+                        flexWrap="nowrap"
+                    >
+                        <Grid item lg={4}>
                             <WordsLeftPanel />
                         </Grid>
-                        <Grid item xs={8} height="100%">
+                        <Grid item lg={8} flexGrow={1} overflow="hidden">
                             <WordsRightPanel />
                         </Grid>
                     </Grid>

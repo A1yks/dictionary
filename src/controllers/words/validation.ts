@@ -30,14 +30,16 @@ const definitionSchema = Joi.object<IDefinition>().keys({
     example: Joi.string(),
 });
 
-const clientWordSchema = Joi.object<Partial<IWord>>().keys({
-    source: Joi.string().required(),
-    phonetic: phoneticSchema,
-    translations: getPartsOfSpeechSchema(Joi.string()),
-    definitions: getPartsOfSpeechSchema(definitionSchema),
-    firstTranslations: Joi.array().items(Joi.string()),
-    hasDefinitions: Joi.boolean(),
-});
+const clientWordSchema = Joi.object<Partial<IWord>>()
+    .keys({
+        source: Joi.string().required(),
+        phonetic: phoneticSchema,
+        translations: getPartsOfSpeechSchema(Joi.string()),
+        definitions: getPartsOfSpeechSchema(definitionSchema),
+        firstTranslations: Joi.array().items(Joi.string()),
+        hasDefinitions: Joi.boolean(),
+    })
+    .unknown(true);
 
 const wordSchema = clientWordSchema.keys({
     id: wordId,

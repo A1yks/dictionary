@@ -71,7 +71,7 @@ const AddWordDialog: FC = () => {
     }, [word]);
 
     return (
-        <CustomDialog id={DialogNames.ADD_WORD_DIALOG}>
+        <CustomDialog id={DialogNames.ADD_WORD_DIALOG} onClose={closeHandler}>
             <form onSubmit={handleSubmit(submitHandler)}>
                 <DialogTitle>Добавить слово</DialogTitle>
                 <DialogContent>

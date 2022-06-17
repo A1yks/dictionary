@@ -1,32 +1,33 @@
 import { Button, Grid, Typography } from '@mui/material';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import styles from './LearnWords.module.scss';
-import { ButtonsLoading, LearnWordsProps } from './LearnWords.types';
+import { ButtonsLoading } from './LearnWords.types';
 import { observer } from 'mobx-react-lite';
 import { useWordsStore } from 'context/StoreContext';
 import { LearnFeedbacks } from 'types/common';
 import { LoadingButton } from '@mui/lab';
 
-const LearnWords: FC<LearnWordsProps> = (props) => {
+const defaultButtonsLoadingState = {
+    [LearnFeedbacks.EASY]: false,
+    [LearnFeedbacks.NORMAL]: false,
+    [LearnFeedbacks.HARD]: false,
+};
+
+const LearnWords: FC = () => {
     const { learnWord, wordsToLearn, loading } = useWordsStore();
     const [showTranslation, setShowTranslation] = useState<boolean>(false);
-    const defaultButtonsLoadingState: ButtonsLoading = useMemo(
-        () => ({
-            [LearnFeedbacks.EASY]: false,
-            [LearnFeedbacks.NORMAL]: false,
-            [LearnFeedbacks.HARD]: false,
-        }),
-        []
-    );
     const [buttonsLoading, setButtonsLoading] = useState<ButtonsLoading>(defaultButtonsLoadingState);
-    const word = wordsToLearn[0];
+    const [wordIndex, setWordIndex] = useState<number>(0);
+    const word = wordsToLearn[wordIndex % wordsToLearn.length];
+
+    console.log(wordIndex, JSON.parse(JSON.stringify(wordsToLearn.map((w) => w.source))));
 
     function toggleTranslation() {
         setShowTranslation((state) => !state);
     }
 
-    function nextWord() {
-        learnWord(word, LearnFeedbacks.SKIP);
+    function skipWord() {
+        setWordIndex((index) => ++index % wordsToLearn.length);
     }
 
     function gradeWord(feedback: LearnFeedbacks) {
@@ -40,7 +41,11 @@ const LearnWords: FC<LearnWordsProps> = (props) => {
         if (!loading) {
             setButtonsLoading(defaultButtonsLoadingState);
         }
-    }, [loading, defaultButtonsLoadingState]);
+    }, [loading]);
+
+    useEffect(() => {
+        setWordIndex((index) => index % wordsToLearn.length);
+    }, [wordsToLearn.length]);
 
     return (
         <Grid container direction="column" className={styles.learnWords} spacing={2}>
@@ -99,7 +104,7 @@ const LearnWords: FC<LearnWordsProps> = (props) => {
                         </LoadingButton>
                     </Grid>
                     <Grid item className={styles.skipBtn}>
-                        <Button variant="contained" color="secondary" onClick={nextWord} disabled={loading}>
+                        <Button variant="contained" color="secondary" onClick={skipWord} disabled={loading}>
                             Пропустить
                         </Button>
                     </Grid>

@@ -54,5 +54,4 @@ export enum LearnFeedbacks {
     EASY = 'easy',
     NORMAL = 'normal',
     HARD = 'hard',
-    SKIP = 'skip',
 }

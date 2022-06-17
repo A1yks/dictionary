@@ -13,12 +13,6 @@ const LearnWordsDialog: FC = () => {
     const { selectedLanguage } = useLanguagesStore();
     const { wordsToLearn } = useWordsStore();
 
-    // useEffect(() => {
-    //     if (selectedLanguage !== null) {
-    //         selectLanguage(selectedLanguage.id);
-    //     }
-    // }, [languages, selectedLanguage, selectLanguage]);
-
     if (selectedLanguage === null) return null;
 
     const wordsToLearnAmount = wordsToLearn.length;
@@ -43,7 +37,7 @@ const LearnWordsDialog: FC = () => {
                         </Grid>
                     </Grid>
                 ) : (
-                    <LearnWords language={selectedLanguage} />
+                    <LearnWords />
                 )}
             </DialogContent>
             <DialogActions>
