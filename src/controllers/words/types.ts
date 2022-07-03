@@ -6,8 +6,12 @@ export enum LearnFeedbacks {
     HARD = 'hard',
 }
 
-export interface SearchWordParams {
+export interface TranslateWordParams {
     word: string;
+}
+
+export interface TranslateWordQueryPamars {
+    langId?: string;
 }
 
 export interface AddWordReq {

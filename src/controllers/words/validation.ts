@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { IDefinition, IPartsOfSpeech, IPhonetic, IWord } from '../../models/Word';
 import objectIdValidation from '../../utils/objectIdValidation';
 import { langId } from '../languages/validation';
-import { AddWordReq, DeleteWordsReq, LearnFeedbacks, LearnWordReq, SearchWordParams } from './types';
+import { AddWordReq, DeleteWordsReq, LearnFeedbacks, LearnWordReq, TranslateWordParams } from './types';
 
 function getPartsOfSpeechSchema(schema: Joi.Schema) {
     return Joi.object<IPartsOfSpeech>().keys({
@@ -48,7 +48,7 @@ const wordSchema = clientWordSchema.keys({
     language: langId,
 });
 
-export const searchWordSchema = Joi.object<SearchWordParams>()
+export const translateWordSchema = Joi.object<TranslateWordParams>()
     .keys({
         word: Joi.string().required(),
     })

@@ -1,4 +1,4 @@
-import { createContext, FC, useContext } from 'react';
+import { createContext, FC, PropsWithChildren, useContext } from 'react';
 import RootStore from 'stores/RootStore';
 
 const store = new RootStore();
@@ -24,6 +24,6 @@ export const useAuthStore = () => useStore().authStore;
 
 export const useUserStore = () => useStore().userStore;
 
-export const StoreContextProvider: FC = (props) => {
+export const StoreContextProvider: FC<PropsWithChildren> = (props) => {
     return <StoreContext.Provider value={store}>{props.children}</StoreContext.Provider>;
 };

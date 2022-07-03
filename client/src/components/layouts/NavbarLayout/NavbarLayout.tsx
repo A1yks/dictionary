@@ -1,7 +1,7 @@
 import Navbar from 'components/helpers/Navbar';
-import { FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 
-const NavbarLayout: FC = (props) => {
+const NavbarLayout: FC<PropsWithChildren> = (props) => {
     return (
         <>
             <Navbar />

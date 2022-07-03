@@ -65,6 +65,10 @@ class WordsService {
 
         return { repeatAt };
     }
+
+    async isWordAdded(langId: string, word: string) {
+        return await Word.exists({ source: word, language: langId });
+    }
 }
 
 export default new WordsService();

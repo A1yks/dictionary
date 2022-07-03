@@ -1,17 +1,32 @@
 import WordsService from '../../services/words/WordsService';
 import { isServiceError } from '../../types/guards';
 import handleServiceResult from '../../utils/handleServiceResult';
-import { AddWordReq, DeleteWordsReq, LearnWordReq, SearchWordParams } from './types';
+import { AddWordReq, DeleteWordsReq, LearnWordReq, TranslateWordParams, TranslateWordQueryPamars } from './types';
 
 class WordsController {
-    async translateWord(req: Server.Request<unknown, SearchWordParams>, res: Server.Response) {
+    async translateWord(req: Server.Request<unknown, TranslateWordParams, TranslateWordQueryPamars>, res: Server.Response) {
         const { word } = req.params;
+        const { langId } = req.query;
 
         try {
-            const result = await WordsService.translateWord(word);
+            let result: Awaited<ReturnType<typeof WordsService['translateWord']>>;
+            let isWordAdded = undefined;
+
+            if (langId !== undefined) {
+                const [translationResult, wordAdded] = await Promise.all([WordsService.translateWord(word), WordsService.isWordAdded(langId, word)]);
+
+                result = translationResult;
+                isWordAdded = wordAdded;
+            } else {
+                result = await WordsService.translateWord(word);
+            }
 
             if (isServiceError(result)) {
                 return res.status(result.status).json({ error: result.error });
+            }
+
+            if (isWordAdded !== undefined) {
+                result.isWordAdded = isWordAdded;
             }
 
             res.status(200).json({ data: result });

@@ -4,7 +4,7 @@ declare global {
     namespace Server {
         export type ResponseBody<T = any> = { data: T } | { error: string };
 
-        export interface Request<Body = any, Params = any> extends express.Request<Params> {
+        export interface Request<Body = any, Params = any, QueryParams = any> extends express.Request<Params, any, any, QueryParams> {
             body: Body;
             userId?: string;
         }

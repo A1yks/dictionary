@@ -20,8 +20,6 @@ const LearnWords: FC = () => {
     const [wordIndex, setWordIndex] = useState<number>(0);
     const word = wordsToLearn[wordIndex % wordsToLearn.length];
 
-    console.log(wordIndex, JSON.parse(JSON.stringify(wordsToLearn.map((w) => w.source))));
-
     function toggleTranslation() {
         setShowTranslation((state) => !state);
     }

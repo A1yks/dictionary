@@ -35,6 +35,7 @@ export interface IWord {
     repeatAt: number;
     repeated: number;
     language: ObjectId;
+    isWordAdded?: boolean;
 }
 
 function partsOfSpeech<T>(type: any): SchemaDefinitionProperty<IPartsOfSpeech<T>> {
