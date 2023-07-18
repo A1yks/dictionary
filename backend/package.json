@@ -1,0 +1,40 @@
+{
+    "name": "dictionary-app-server",
+    "version": "1.0.0",
+    "description": "dictionary app server",
+    "main": "src/server.ts",
+    "scripts": {
+        "server": "nodemon --watch ./src --ext \"ts,json\" --exec \"ts-node --files src/server.ts\"",
+        "client": "npm start --prefix client",
+        "dev": "concurrently \"npm run server\" \"npm run client\"",
+        "start": "cross-env NODE_ENV=production node build/server.js",
+        "build": "npm run build --prefix client && tsc"
+    },
+    "author": "Alyks",
+    "license": "ISC",
+    "dependencies": {
+        "autobind-decorator": "^2.4.0",
+        "axios": "^0.24.0",
+        "bcrypt": "^5.0.1",
+        "cookie-parser": "^1.4.6",
+        "cors": "^2.8.5",
+        "dotenv": "^11.0.0",
+        "express": "^4.17.2",
+        "joi": "^17.6.0",
+        "jsonwebtoken": "^9.0.0",
+        "mongoose": "^7.3.1"
+    },
+    "devDependencies": {
+        "@types/bcrypt": "^5.0.0",
+        "@types/cookie-parser": "^1.4.3",
+        "@types/cors": "^2.8.12",
+        "@types/cron": "^1.7.3",
+        "@types/express": "^4.17.13",
+        "@types/jsonwebtoken": "^8.5.8",
+        "@types/node": "^20.3.2",
+        "@typescript-eslint/eslint-plugin": "^5.61.0",
+        "@typescript-eslint/parser": "^5.61.0",
+        "eslint": "^8.15.0",
+        "tsconfig-paths": "^4.2.0"
+    }
+}

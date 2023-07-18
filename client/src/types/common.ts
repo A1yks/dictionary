@@ -28,21 +28,25 @@ export interface WordInfo {
 }
 
 export interface Word extends WordInfo {
-    id: string;
+    _id: string;
     repeated: number;
     repeatAt: number;
 }
 
 export interface Language {
-    id: string;
+    _id: string;
     name: string;
     wordsLearned: number;
     words: Word[];
     wordsToLearn: Word[];
+    wordsAmount: number;
+    wordsToLearnAmount: number;
+    wordsFetchOffset: number;
+    wordsToLearnFetchOffset: number;
 }
 
 export type RouteParams = {
-    langId?: string;
+    dictId?: string;
 };
 
 export interface User {

@@ -1,25 +1,23 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { useAuthStore, useUserStore } from 'context/StoreContext';
 import PageLoader from 'components/UI/PageLoader';
 import { observer } from 'mobx-react-lite';
 import Router from 'components/helpers/Router';
+import UserAPI from 'api/UserAPI';
+import { useQuery } from 'react-query';
 
 const App: FC = () => {
     const { isLoggedIn } = useAuthStore();
-    const { getCurrentUser, loading: gettingUser, error } = useUserStore();
-    const [loading, setLoading] = useState<boolean>(true);
+    const userStore = useUserStore();
+    const { data, isLoading, isError } = useQuery('userData', UserAPI.getUser);
 
     useEffect(() => {
-        getCurrentUser();
-    }, [getCurrentUser]);
-
-    useEffect(() => {
-        if (isLoggedIn || (error !== '' && !gettingUser)) {
-            setLoading(false);
+        if (data !== undefined) {
+            userStore.setUser(data);
         }
-    }, [gettingUser, isLoggedIn, error]);
+    }, [data, userStore]);
 
-    if (loading)
+    if (!isLoggedIn && (!isError || isLoading))
         return (
             <div className="app">
                 <PageLoader />

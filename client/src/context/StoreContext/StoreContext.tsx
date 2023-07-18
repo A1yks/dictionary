@@ -1,7 +1,6 @@
 import { createContext, FC, PropsWithChildren, useContext } from 'react';
-import RootStore from 'stores/RootStore';
+import { rootStore as store, RootStore } from 'stores/RootStore';
 
-const store = new RootStore();
 const StoreContext = createContext<RootStore | undefined>(undefined);
 
 export function useStore() {

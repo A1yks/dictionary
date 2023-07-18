@@ -2,7 +2,7 @@ import UserAPI from 'api/UserAPI';
 import { makeAutoObservable } from 'mobx';
 import { User } from 'types/common';
 import Request from './decorators/Request';
-import RootStore from './RootStore';
+import { RootStore } from './RootStore';
 import { IRequest } from './types';
 
 class UserStore implements IRequest {

@@ -10,12 +10,12 @@ class LanguagesAPI {
         return await API<Language>('/languages/add', { method: 'POST', data: { langName } });
     }
 
-    async deleteLanguage(langId: string) {
-        await API('/languages/delete', { method: 'DELETE', data: { langId } });
+    async deleteLanguage(dictId: string) {
+        await API('/languages/delete', { method: 'DELETE', data: { dictId } });
     }
 
-    async editLanguageName(langId: string, langName: string) {
-        return await API<Language>('/languages/edit', { method: 'PATCH', data: { langId, langName } });
+    async editLanguageName(dictId: string, langName: string) {
+        return await API<Language>('/languages/edit', { method: 'PATCH', data: { dictId, langName } });
     }
 }
 

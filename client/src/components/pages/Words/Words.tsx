@@ -15,13 +15,13 @@ import NavbarLayout from 'components/layouts/NavbarLayout';
 
 const Words: FC = () => {
     const { selectedLanguage, selectLanguage, languages } = useLanguagesStore();
-    const { langId } = useParams<RouteParams>();
+    const { dictId } = useParams<RouteParams>();
     const navigate = useNavigate();
 
     const updateSelectedLanguage = useCallback(() => {
-        if (langId !== undefined) {
+        if (dictId !== undefined) {
             try {
-                selectLanguage(langId);
+                selectLanguage(dictId);
             } catch (err) {
                 if (err instanceof NoSuchLanguageError) {
                     return navigate('/');
@@ -30,7 +30,7 @@ const Words: FC = () => {
                 console.error(err);
             }
         }
-    }, [selectLanguage, langId, navigate]);
+    }, [selectLanguage, dictId, navigate]);
 
     useEffect(() => {
         if (selectedLanguage === null) {

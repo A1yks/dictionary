@@ -9,7 +9,7 @@ function useNavbar() {
     const username = user?.login;
 
     function backClickHandler() {
-        navigate(-1);
+        navigate('/');
     }
 
     return { username, showBackArrow, backClickHandler };

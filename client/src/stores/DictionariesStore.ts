@@ -1,14 +1,14 @@
 import { makeAutoObservable } from 'mobx';
 
 class DictionariesStore {
-    workingLanguageId: string = '';
+    workingLanguageId = '';
 
     constructor() {
         makeAutoObservable(this, {}, { autoBind: true });
     }
 
-    setWorkingLanguageId(langId: string) {
-        this.workingLanguageId = langId;
+    setWorkingLanguageId(dictId: string) {
+        this.workingLanguageId = dictId;
     }
 }
 

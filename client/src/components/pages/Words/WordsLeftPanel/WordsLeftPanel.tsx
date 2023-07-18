@@ -9,7 +9,7 @@ import { openDialogHandler } from 'components/UI/CustomDialog/controllers';
 import { observer } from 'mobx-react-lite';
 
 const WordsLeftPanel: FC = () => {
-    const { selectedLanguage, wordsToLearn, learnWords } = useLeftPanel();
+    const { selectedLanguage, learnWords } = useLeftPanel();
 
     return (
         <div className={styles.wordsLeftPanel}>
@@ -17,9 +17,9 @@ const WordsLeftPanel: FC = () => {
                 {selectedLanguage.name}
             </Typography>
             <div className={styles.wordsInfo}>
-                <Typography component="p">Всего слов: {selectedLanguage.words.length}</Typography>
+                <Typography component="p">Всего слов: {selectedLanguage.wordsAmount}</Typography>
                 <Typography component="p">
-                    Сегодня необходимо повторить {wordsToLearn.length} {getEnding(wordsToLearn.length)}
+                    Сегодня необходимо повторить {selectedLanguage.wordsToLearnAmount} {getEnding(selectedLanguage.wordsToLearnAmount)}
                 </Typography>
             </div>
             <div className={styles.buttonsWrapper}>

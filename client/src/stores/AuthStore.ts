@@ -3,11 +3,11 @@ import { makeAutoObservable } from 'mobx';
 import Request from 'stores/decorators/Request';
 import { IRequest } from 'stores/types';
 import { User } from 'types/common';
-import RootStore from './RootStore';
+import { RootStore } from './RootStore';
 
 class AuthStore implements IRequest {
-    loading: boolean = false;
-    error: string = '';
+    loading = false;
+    error = '';
 
     constructor(private rootStore: RootStore) {
         makeAutoObservable(this, {}, { autoBind: true });

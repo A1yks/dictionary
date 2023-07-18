@@ -24,7 +24,7 @@ const DictionaryCard: FC<DictionaryCardProps> = (props) => {
 
     function openDialogWrapper(callback: () => void) {
         return () => {
-            setWorkingLanguageId(props.language.id);
+            setWorkingLanguageId(props.language._id);
             callback();
         };
     }
@@ -44,7 +44,7 @@ const DictionaryCard: FC<DictionaryCardProps> = (props) => {
                     <Typography component="p" color="blue">
                         Добавлено слов:{' '}
                         <Typography component="span" color="black">
-                            {props.language.words.length}
+                            {props.language.wordsAmount}
                         </Typography>
                     </Typography>
                     <Typography component="p" color="lime">
@@ -57,7 +57,7 @@ const DictionaryCard: FC<DictionaryCardProps> = (props) => {
             </CardContent>
             <CardActions>
                 <div className={styles.cardActionsWrapper}>
-                    <Link to={`/language/${props.language.id}`} className={styles.btn}>
+                    <Link to={`/language/${props.language._id}`} className={styles.btn}>
                         <Button size="small" color="primary" variant="contained" onClick={chooseCurrentLanguage}>
                             Просмотр слов
                         </Button>

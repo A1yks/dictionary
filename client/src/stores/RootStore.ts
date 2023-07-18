@@ -4,7 +4,7 @@ import AuthStore from 'stores/AuthStore';
 import WordsStore from 'stores/WordsStore';
 import UserStore from './UserStore';
 
-class RootStore {
+export class RootStore {
     authStore: AuthStore;
     userStore: UserStore;
     languagesStore: LanguagesStore;
@@ -20,4 +20,4 @@ class RootStore {
     }
 }
 
-export default RootStore;
+export const rootStore = new RootStore();

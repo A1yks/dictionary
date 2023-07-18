@@ -1,8 +1,11 @@
-import { useAuthStore } from 'context/StoreContext';
+import { useAuthStore, useUserStore } from 'context/StoreContext';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { AuthProps, FormRules, InputNames } from '../Auth.types';
+import { extractError } from 'utils/extractError';
+import { useLoginMutation, useRegisterMutation } from 'api/AuthAPI/AuthAPI';
+import useErrorsHandler from 'hooks/useErrorsHandler';
 
 function useAuth(variant: AuthProps['variant']) {
     const [login, setLogin] = useState<string>('');
@@ -12,8 +15,29 @@ function useAuth(variant: AuthProps['variant']) {
     const [errorAlertOpened, setErrorAlertOpened] = useState<boolean>(false);
     const { control, handleSubmit, reset } = useForm();
     const authStore = useAuthStore();
-    const { loading, error, setError, isLoggedIn } = authStore;
+    const userStore = useUserStore();
+    const { isLoggedIn } = authStore;
+    const {
+        isLoading: isLogginIn,
+        error: loginError,
+        mutateAsync: loginMutation,
+    } = useLoginMutation({
+        onSuccess(user) {
+            userStore.setUser(user);
+        },
+    });
+    const {
+        isLoading: isRegistering,
+        error: registrationError,
+        mutateAsync: registerMutation,
+    } = useRegisterMutation({
+        onSuccess(user) {
+            userStore.setUser(user);
+        },
+    });
     const navigate = useNavigate();
+    const error = extractError(loginError || registrationError);
+    const loading = isLogginIn || isRegistering;
 
     const loginRules: FormRules = {
         required: { value: true, message: 'Введите логин' },
@@ -38,13 +62,13 @@ function useAuth(variant: AuthProps['variant']) {
         },
     };
 
-    async function sendForm() {
+    const sendForm = useErrorsHandler(async () => {
         if (variant === 'register') {
-            await authStore.register(login, [password, confirmationPassword]);
+            await registerMutation({ login, passwords: [password, confirmationPassword] });
         } else {
-            await authStore.login(login, password);
+            await loginMutation({ login, password });
         }
-    }
+    });
 
     function toggleShowPassword() {
         setShowPassword((show) => !show);
@@ -65,7 +89,7 @@ function useAuth(variant: AuthProps['variant']) {
             [InputNames.PASSWORD]: '',
             [InputNames.CONF_PASSWORD]: '',
         });
-    }, [variant, reset, setError]);
+    }, [variant, reset]);
 
     useEffect(() => {
         if (error === '') {

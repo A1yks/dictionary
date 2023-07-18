@@ -14,7 +14,7 @@ const Router: FC = () => {
             {isLoggedIn ? (
                 <Routes>
                     <Route path="/" element={<Dictionaries />} />
-                    <Route path="/language/:langId" element={<Words />} />
+                    <Route path="/language/:dictId" element={<Words />} />
                     <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
             ) : (

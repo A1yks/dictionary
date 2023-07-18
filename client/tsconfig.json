@@ -19,8 +19,11 @@
         "baseUrl": "./src",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": false,
-        "sourceMap": true
+        "sourceMap": true,
+        "paths": {
+            "@backend/*": ["../../backend/src/*"]
+        }
     },
-    "include": ["src", "declarations.d.ts"],
+    "include": ["."],
     "exclude": ["node_modules"]
 }
